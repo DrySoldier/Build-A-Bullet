@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, Text, Button, Dimensions, Alert } from 'react-native';
-import { createStore } from 'redux';
 
 console.disableYellowBox = true;
 
@@ -17,6 +16,7 @@ export default class MainScreenComponent extends React.Component {
     title: 'Choose Your Store',
   }
 
+
   render() {
     return (
       <View
@@ -27,7 +27,7 @@ export default class MainScreenComponent extends React.Component {
           borderColor: 'teal',
         }}>
         <Button
-          title="Buildin Bullets Store"
+          title="Buildin/' Bullets Store"
           onPress={() => this.props.navigation.navigate('gunStore')}
         />
         <Button

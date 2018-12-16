@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Platform,
@@ -10,21 +10,37 @@ import {
   Dimensions
 } from 'react-native';
 
+import { connect } from 'react-redux';
+import * as Actions from '../redux/Actions/ActionTypes';
+
+const mapStateToProps = (state) => ({
+  count: state.counterReducer.count
+});
+
+const mapDispatchToProps = (dispatch) => ({
+ increment: () => dispatch({type: Actions.COUNTER_INCREMENT}),
+ decrement: () => dispatch({type: Actions.COUNTER_DECREMENT}),
+});
+
 const device_width = Dimensions.get('window').width;
 const device_height = Dimensions.get('window').height;
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+
+  constructor(props) {
+    super(props)
+  }
 
   render() {
     return (
       <View style={styles.bulletContainer}>
 
-        <Text style={{fontSize: 60}}>TEST</Text>
+        <Text style={{fontSize: 60}}>{this.props.count}</Text>
 
-        <TouchableOpacity onPress={this.bulletButton}>
+        <TouchableOpacity onPress={this.props.increment}>
           <Image source={require('../assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png')} style={{resizeMode: 'contain', width: device_width}}/>
         </TouchableOpacity>
 
@@ -46,6 +62,7 @@ const styles = StyleSheet.create({
   },
   bulletContainer: {
     flex: 1,
+    margin: 50,
     backgroundColor: '#eeee',
     justifyContent: 'center',
     alignItems: 'center',
@@ -57,3 +74,5 @@ const styles = StyleSheet.create({
   },
 
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
