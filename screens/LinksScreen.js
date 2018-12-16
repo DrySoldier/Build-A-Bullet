@@ -6,11 +6,6 @@ console.disableYellowBox = true;
 const device_width = Dimensions.get('window').width;
 const device_height = Dimensions.get('window').height;
 
-checkCanBuyBullet = () => {
-
-}
-
-
 export default class MainScreenComponent extends React.Component {
   static navigationOptions = {
     title: 'Choose Your Store',
@@ -27,7 +22,7 @@ export default class MainScreenComponent extends React.Component {
           borderColor: 'teal',
         }}>
         <Button
-          title="Buildin/' Bullets Store"
+          title="Buildin' Bullets Store"
           onPress={() => this.props.navigation.navigate('gunStore')}
         />
         <Button

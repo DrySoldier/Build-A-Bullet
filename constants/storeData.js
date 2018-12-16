@@ -1,10 +1,12 @@
+import store from "../redux/Reducers";
+
 export default bulletMachineData = [
   {
     imagePath: 'https://qph.fs.quoracdn.net/main-qimg-2089461a7bd8102a66b5f0168f14035a',
     itemName: 'Bullet Machine',
-    itemPrice: 500,
+    itemPrice: store.getState().priceOfBulletMachine,
     itemDescription: 'This is a bullet machine',
-    buyButton: checkCanBuyBullet
+    buyButton: 'checkCanBuyBullet'
     
     },
   {

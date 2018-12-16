@@ -19,7 +19,7 @@ import * as Actions from '../../redux/Actions/ActionTypes';
 
 const mapStateToProps = (state) => ({
   count: state.counterReducer.count
-});
+}); 
 
 const mapDispatchToProps = (dispatch) => ({
   buyBulletMachine: () => dispatch({ type: Actions.BUY_BULLET_MACHINE }),
@@ -32,7 +32,7 @@ const device_height = Dimensions.get('window').height;
 class GunComponent extends React.Component {
 
   static navigationOptions = {
-    title: 'Buildin Bullets Store',
+    title: "Buildin' Bullets Store",
   }
 
   constructor(props) {
@@ -47,7 +47,7 @@ class GunComponent extends React.Component {
 
   _onPress = (e) => {
     switch (e) {
-      case checkCanBuyBullet:
+      case 'checkCanBuyBullet':
         this.props.buyBulletMachine()
         break;
 

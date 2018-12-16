@@ -1,6 +1,6 @@
 import * as Actions from '../Actions/ActionTypes'
 
-const CounterReducer = (state = { count: 0, bulletMachinesBought: 0 }, action) => {
+const CounterReducer = (state = { count: 0, bulletMachinesBought: 0, priceOfBulletMachine: 500 }, action) => {
     switch (action.type) {
         case Actions.COUNTER_INCREMENT:
             return Object.assign({}, state, {
@@ -11,9 +11,9 @@ const CounterReducer = (state = { count: 0, bulletMachinesBought: 0 }, action) =
                 count: state.count - 1
             });
         case Actions.BUY_BULLET_MACHINE:
-            if (state.count >= 500) {
+            if (state.count >= state.priceOfBulletMachine) {
                 return Object.assign({}, state, state, {
-                    count: state.count -= 500,
+                    count: state.count -= state.priceOfBulletMachine,
                     bulletMachinesBought: state.bulletMachinesBought += 1
                 });
             } else {
