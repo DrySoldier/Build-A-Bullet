@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -32,6 +33,20 @@ class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props)
+
+    this._onPressPlay = this._onPressPlay.bind(this);
+  }
+
+  _onPressPlay = () => {
+    Alert.alert(
+      'Start Game?',
+      'Would you like to start the game?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => this.props.navigation.navigate('Game')},
+      ],
+      { cancelable: false }
+    )
   }
 
   render() {

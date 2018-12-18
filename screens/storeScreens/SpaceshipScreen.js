@@ -17,7 +17,7 @@ const device_height = Dimensions.get('window').height;
 
 export default class SpaceshipComponent extends React.Component {
     static navigationOptions = {
-      header: null,
+      title: 'You are LOST',
     };
   
     render() {
@@ -32,8 +32,7 @@ export default class SpaceshipComponent extends React.Component {
           <Button
             title="Go to three"
             onPress={() =>
-              this.props.navigation.navigate('LinksScreen', {
-                greeting: 'Hallo',
+              this.props.navigation.navigate('Links', {
               })
             }
           />

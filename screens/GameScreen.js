@@ -19,9 +19,10 @@ console.disableYellowBox = true;
 const device_width = Dimensions.get('window').width;
 const device_height = Dimensions.get('window').height;
 
-class MainScreenComponent extends React.Component {
+class GameScreen extends React.Component {
   static navigationOptions = {
-    title: 'Choose Your Store',
+    header: null,
+    tabBarVisible: false,
   }
 
   constructor(props){
@@ -31,22 +32,8 @@ class MainScreenComponent extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          borderWidth: 25,
-          borderColor: 'teal',
-        }}>
-        <Text style={{fontSize: 60}}>{this.props.count}</Text>
-        <Button
-          title="Buildin' Bullets Store"
-          onPress={() => this.props.navigation.navigate('gunStore')}
-        />
-        <Button
-          title="spaceship Store"
-          onPress={() => this.props.navigation.navigate('spaceshipStore')}
-        />
+      <View>
+
       </View>
     );
   }
@@ -63,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainScreenComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

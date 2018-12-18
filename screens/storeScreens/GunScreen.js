@@ -18,8 +18,10 @@ import { connect } from 'react-redux';
 import * as Actions from '../../redux/Actions/ActionTypes';
 
 const mapStateToProps = (state) => ({
-  count: state.counterReducer.count
-}); 
+  bulletMachinesBought: state.counterReducer.bulletMachinesBought,
+  count: state.counterReducer.count,
+  priceOfBulletMachine: state.counterReducer.priceOfBulletMachine,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   buyBulletMachine: () => dispatch({ type: Actions.BUY_BULLET_MACHINE }),
@@ -31,12 +33,18 @@ const device_height = Dimensions.get('window').height;
 
 class GunComponent extends React.Component {
 
+  componentDidMount(){
+    bulletMachineData[1].itemPrice = this.props.priceOfBulletMachine;
+  }
+
   static navigationOptions = {
     title: "Buildin' Bullets Store",
   }
 
   constructor(props) {
     super(props);
+
+    const callCountUp = setInterval(this.countUp, 1000);
 
     this._onPress = this._onPress.bind(this);
 
@@ -49,6 +57,11 @@ class GunComponent extends React.Component {
     switch (e) {
       case 'checkCanBuyBullet':
         this.props.buyBulletMachine()
+        
+        this.props.navigation.navigate('Links');
+
+        this.callCountUp
+
         break;
 
       default:
@@ -56,6 +69,12 @@ class GunComponent extends React.Component {
         break;
     }
   };
+
+  countUp = () => {
+    for (let i = 0; i < this.props.bulletMachinesBought; i++) {
+      this.props.increment();
+    }
+  }
 
   render() {
     return (
@@ -70,10 +89,10 @@ class GunComponent extends React.Component {
               containerStyle={{ padding: 0, width: device_width * .91, height: device_height * .69 }}
             >
               <Button title="Buy Now!" onPress={() => this._onPress(rowData.buyButton)} />
-              <Text style={{ marginBottom: 5, fontSize: 20, textAlign: 'center', }}>
+              <Text style={styles.container}>
                 {rowData.itemPrice}
               </Text>
-              <Text style={{ marginBottom: 5, fontSize: 20, textAlign: 'center', }}>
+              <Text style={styles.container}>
                 {rowData.itemDescription}
               </Text>
             </Card>
@@ -86,3 +105,12 @@ class GunComponent extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GunComponent);
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 5, 
+    fontSize: 20, 
+    textAlign: 'center',
+  },
+
+});

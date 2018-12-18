@@ -8,9 +8,11 @@ import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SpaceshipScreen from '../screens/storeScreens/SpaceshipScreen';
 import GunScreen from '../screens/storeScreens/GunScreen'
+import GameScreen from '../screens/GameScreen'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Game: GameScreen,
 });
 
 HomeStack.navigationOptions = {
