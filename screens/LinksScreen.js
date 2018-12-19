@@ -5,12 +5,18 @@ import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
 
 const mapStateToProps = (state) => ({
-  count: state.counterReducer.count
+  count: state.counterReducer.count,
+
+  bulletMachinesBought: state.bulletMachineReducer.bulletMachinesBought,
+  priceOfBulletMachine: state.bulletMachineReducer.priceOfBulletMachine,
+
+  bulletFactoriesBought: state.bulletFactoryReducer.bulletFactoriesBought,
+  priceOfBulletFactory: state.bulletFactoryReducer.priceOfBulletFactory,
 });
 
 const mapDispatchToProps = (dispatch) => ({
- increment: () => dispatch({type: Actions.COUNTER_INCREMENT}),
- decrement: () => dispatch({type: Actions.COUNTER_DECREMENT}),
+  increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
+  decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
 });
 
 
@@ -24,21 +30,17 @@ class MainScreenComponent extends React.Component {
     title: 'Choose Your Store',
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          borderWidth: 25,
-          borderColor: 'teal',
-        }}>
-        <Text style={{fontSize: 60}}>{this.props.count}</Text>
+      <View style={styles.container}>
+
+        <Text>Bullet Machines Purchased: {this.props.bulletMachinesBought}</Text>
+        <Text>Bullet Factories Purchased: {this.props.bulletFactoriesBought}</Text>
         <Button
           title="Buildin' Bullets Store"
           onPress={() => this.props.navigation.navigate('gunStore')}
@@ -47,6 +49,7 @@ class MainScreenComponent extends React.Component {
           title="spaceship Store"
           onPress={() => this.props.navigation.navigate('spaceshipStore')}
         />
+
       </View>
     );
   }
@@ -59,7 +62,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+    borderWidth: 25,
+    borderColor: 'teal',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
+    fontSize: 50,
   },
 });
 

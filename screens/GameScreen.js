@@ -3,14 +3,15 @@ import { ScrollView, StyleSheet, View, TouchableOpacity, Text, Button, Dimension
 
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
+import BestGameEver from '../ReactGameEngine/index.ios';
 
 const mapStateToProps = (state) => ({
-  count: state.counterReducer.count
+    count: state.counterReducer.count
 });
 
 const mapDispatchToProps = (dispatch) => ({
- increment: () => dispatch({type: Actions.COUNTER_INCREMENT}),
- decrement: () => dispatch({type: Actions.COUNTER_DECREMENT}),
+    increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
+    decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
 });
 
 
@@ -20,34 +21,35 @@ const device_width = Dimensions.get('window').width;
 const device_height = Dimensions.get('window').height;
 
 class GameScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-    tabBarVisible: false,
-  }
+    static navigationOptions = {
+        header: null,
+        tabBarVisible: false,
+    }
 
-  constructor(props){
-    super(props)
-  }
+    constructor(props) {
+        super(props)
+    }
 
 
-  render() {
-    return (
-      <View>
-
-      </View>
-    );
-  }
+    render() {
+        return (
+            <View>
+                <Text style={{ fontSize: 60 }}>{this.props.count}</Text>
+                <BestGameEver />
+            </View>
+        );
+    }
 }
 
 
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff',
-  },
+    container: {
+        flex: 1,
+        paddingTop: 15,
+        backgroundColor: '#fff',
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

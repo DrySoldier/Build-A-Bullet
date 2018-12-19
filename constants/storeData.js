@@ -1,9 +1,9 @@
 
-export default bulletMachineData = [
+/*export default bulletMachineData = [
   {
     imagePath: 'https://qph.fs.quoracdn.net/main-qimg-2089461a7bd8102a66b5f0168f14035a',
     itemName: 'Bullet Machine',
-    itemPrice: 'this.props.priceOfBulletMachine',
+    itemPrice: this.props.bulletMachineData,
     itemDescription: 'This is a bullet machine',
     buyButton: 'checkCanBuyBullet'
     
@@ -37,3 +37,4 @@ export default bulletMachineData = [
   },
 
 ];
+*/
