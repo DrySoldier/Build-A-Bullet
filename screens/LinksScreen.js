@@ -39,8 +39,8 @@ class MainScreenComponent extends React.Component {
     return (
       <View style={styles.container}>
 
-        <Text>Bullet Machines Purchased: {this.props.bulletMachinesBought}</Text>
-        <Text>Bullet Factories Purchased: {this.props.bulletFactoriesBought}</Text>
+        <Text style={styles.text}>Bullet Machines Purchased: {this.props.bulletMachinesBought}</Text>
+        <Text style={styles.text}>Bullet Factories Purchased: {this.props.bulletFactoriesBought}</Text>
         <Button
           title="Buildin' Bullets Store"
           onPress={() => this.props.navigation.navigate('gunStore')}
@@ -69,6 +69,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 50,
   },
+  text: {
+    fontSize: 30,
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreenComponent);

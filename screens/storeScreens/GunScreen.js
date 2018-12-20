@@ -1,20 +1,9 @@
 import React from 'react';
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Button,
-  FlatList,
-  Dimensions
-} from 'react-native';
+import { Button, Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
-
 import { connect } from 'react-redux';
 import * as Actions from '../../redux/Actions/ActionTypes';
+
 
 const mapStateToProps = (state) => ({
   count: state.counterReducer.count,
@@ -46,33 +35,14 @@ class GunComponent extends React.Component {
 
   constructor(props) {
     super(props);
-
-    const bulletMachineData = [
-      {
-        imagePath: 'https://qph.fs.quoracdn.net/main-qimg-2089461a7bd8102a66b5f0168f14035a',
-        itemName: 'Bullet Machine',
-        itemPrice: this.props.priceOfBulletMachine,
-        itemDescription: 'This is a bullet machine',
-        buyButton: 'checkCanBuyBulletMachine'
-
-      },
-      {
-        imagePath: 'https://c7.uihere.com/files/211/601/184/5bbc14d49a6a7-thumb.jpg',
-        itemName: 'Bullet Factory',
-        itemPrice: this.props.priceOfBulletFactory,
-        itemDescription: 'This is a bullet factory',
-        buyButton: 'checkCanBuyBulletFactory'
-      },
-
-    ];
-
+    
     const callCountUpMachine = setInterval(this.countUpMachine, 1000);
     const callCountUpFactory = setInterval(this.countUpFactory, 1000);
 
     this._onPress = this._onPress.bind(this);
 
     this.state = {
-      data: bulletMachineData
+      data: bulletMachineData,
     };
   }
 
@@ -82,8 +52,6 @@ class GunComponent extends React.Component {
 
         if (this.props.count >= this.props.priceOfBulletMachine) {
           this.props.buyBulletMachine()
-
-          this.props.navigation.navigate('Links');
 
           this.callCountUpMachine
 
@@ -103,8 +71,6 @@ class GunComponent extends React.Component {
 
         if (this.props.count >= this.props.priceOfBulletFactory) {
           this.props.buyBulletFactory()
-       
-          this.props.navigation.navigate('Links');
 
           this.callCountUpFactory
 
@@ -140,33 +106,34 @@ class GunComponent extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-      <FlatList
-          horizontal
-          data={this.state.data}
-          extraData={this.props}
-          renderItem={({ item: rowData }) => {
-            return (
-              <Card
-                title={rowData.itemName}
-                image={{ uri: rowData.imagePath }}
-                containerStyle={{ padding: 0, width: device_width * .91, height: device_height * .69 }}
-              >
-                <Button title="Buy Now!" onPress={() => this._onPress(rowData.buyButton)} />
-                <Text style={styles.container}>
-                  {rowData.itemPrice}
-                </Text>
-                <Text style={styles.container}>
-                  {rowData.itemDescription}
-                </Text>
-              </Card>
-            );
-          }}
-          keyExtractor={(item, index) => index.toString()}
-        />
+      <View>
+        <ScrollView style={styles.container} horizontal={true}>
+          <Card
+            title='Bullet Machine'
+            image={require('../../assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png')}
+            containerStyle={{ padding: 0, width: device_width * .91, height: device_height * .69 }}
+          >
+            <Button title="Buy Now!" onPress={() => this._onPress('checkCanBuyBulletMachine')} />
+            <Text style={styles.container}>{this.props.priceOfBulletMachine}</Text>
+            <Text style={styles.container}>This is a bullet machine</Text>
+          </Card>
 
-        <Text style={{fontSize: 60, paddingLeft: device_width / 2,}}>{this.props.count}</Text>
+          <Card
+            title='Bullet Factory'
+            image={require('../../assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png')}
+            containerStyle={{ padding: 0, width: device_width * .91, height: device_height * .69 }}
+          >
+            <Button title="Buy Now!" onPress={() => this._onPress('checkCanBuyBulletFactory')} />
+            <Text style={styles.container}>{this.props.priceOfBulletFactory}</Text>
+            <Text style={styles.container}>This is a bullet factory</Text>
+          </Card>
+
+        </ScrollView>
+
+        <Text style={{ fontSize: 60, paddingLeft: device_width / 2, }}>{this.props.count}</Text>
+
       </View>
+
     );
   }
 }
@@ -178,7 +145,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 20,
     textAlign: 'center',
-    justifyContent: 'center'
   },
 
 });
