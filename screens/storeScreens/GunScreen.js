@@ -23,6 +23,10 @@ const mapDispatchToProps = (dispatch) => ({
   incrementTen: () => dispatch({ type: Actions.COUNTER_INCREMENT_TEN }),
   incrementFifteen: () => dispatch({ type: Actions.COUNTER_INCREMENT_FIFTEEN }),
   incrementTwenty: () => dispatch({ type: Actions.COUNTER_INCREMENT_TWENTY }),
+  incrementTwentyFive: () => dispatch({ type: Actions.COUNTER_INCREMENT_TWENTYFIVE }),
+  incrementThirty: () => dispatch({ type: Actions.COUNTER_INCREMENT_THIRTY }),
+  incrementThirtyFive: () => dispatch({ type: Actions.COUNTER_INCREMENT_THIRTYFIVE }),
+  incrementForty: () => dispatch({ type: Actions.COUNTER_INCREMENT_FORTY }),
   increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
   decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
 });
@@ -88,20 +92,30 @@ class GunComponent extends React.Component {
   };
 
   countUpMachine = () => {
-    if (this.props.bulletMachinesBought < 5) {
+    if (this.props.bulletMachinesBought < 4) {
       for (let i = 0; i < this.props.bulletMachinesBought; i++) {
         this.props.increment();
         console.log('triggered1')
       }
-    } else if (this.props.bulletMachinesBought > 4) {
-      for (let i = 0; Math.round(i < this.props.bulletMachinesBought / 5); i++) {
+    } else if (this.props.bulletMachinesBought < 9) {
+      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 10); i++) {
         this.props.incrementFive();
         console.log('triggered2')
       }
-    } else if (this.props.bulletMachinesBought > 9) {
-      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 10); i++) {
+    } else if (this.props.bulletMachinesBought < 14) {
+      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 15); i++) {
         this.props.incrementTen();
         console.log('triggered3')
+      }
+    } else if (this.props.bulletMachinesBought < 19) {
+      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 20); i++) {
+        this.props.incrementFifteen();
+        console.log('triggered4')
+      }
+    } else if (this.props.bulletMachinesBought < 24) {
+      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 25); i++) {
+        this.props.incrementTwenty();
+        console.log('triggered5')
       }
     }
   }
@@ -111,13 +125,21 @@ class GunComponent extends React.Component {
       for (let i = 0; i < this.props.bulletFactoriesBought; i++) {
         this.props.incrementFive();
       }
-    } else if (this.props.bulletFactoriesBought > 4) {
-      for (let i = 0; Math.round(i < this.props.bulletFactoriesBought / 5); i++) {
+    } else if (this.props.bulletFactoriesBought < 9) {
+      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 10); i++) {
         this.props.incrementTen();
       }
-    } else if (this.props.bulletFactoriesBought > 9) {
-      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 10); i++) {
+    } else if (this.props.bulletFactoriesBought < 15) {
+      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 15); i++) {
         this.props.incrementFifteen();
+      }
+    } else if (this.props.bulletFactoriesBought < 20) {
+      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 20); i++) {
+        this.props.incrementTwenty();
+      }
+    } else if (this.props.bulletFactoriesBought <= 25) {
+      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 25); i++) {
+        this.props.incrementTwentyFive();
       }
     }
   }
@@ -148,7 +170,7 @@ class GunComponent extends React.Component {
 
         </ScrollView>
 
-        <Text style={{ fontSize: 60, paddingLeft: device_width / 2, }}>{this.props.count}</Text>
+        <Text style={{ fontSize: 30 }}>Bullets: {this.props.count}</Text>
 
       </View>
 

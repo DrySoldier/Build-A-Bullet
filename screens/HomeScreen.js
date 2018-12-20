@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   bulletContainer: {
     flex: 1,
-    margin: 50,
+    margin: 25,
     backgroundColor: '#eeee',
     justifyContent: 'center',
     alignItems: 'center',
