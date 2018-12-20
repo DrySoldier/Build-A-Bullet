@@ -1,6 +1,6 @@
 import * as Actions from '../Actions/ActionTypes'
 
-const CounterReducer = (state = { count: 5000 }, action) => {
+const CounterReducer = (state = { count: 100000 }, action) => {
     switch (action.type) {
         case Actions.COUNTER_INCREMENT:
             return Object.assign({}, state, {
@@ -10,10 +10,21 @@ const CounterReducer = (state = { count: 5000 }, action) => {
             return Object.assign({}, state, {
                 count: state.count - 1
             });
-
-        case Actions.COUNTER_FACTORY_INCREMENT:
+        case Actions.COUNTER_INCREMENT_FIVE:
             return Object.assign({}, state, {
-                count: state.count + 3
+                count: state.count + 5
+            });
+        case Actions.COUNTER_INCREMENT_TEN:
+            return Object.assign({}, state, {
+                count: state.count + 10
+            });
+        case Actions.COUNTER_INCREMENT_FIFTEEN:
+            return Object.assign({}, state, {
+                count: state.count + 15
+            });
+        case Actions.COUNTER_INCREMENT_TWENTY:
+            return Object.assign({}, state, {
+                count: state.count + 20
             });
 
         default:

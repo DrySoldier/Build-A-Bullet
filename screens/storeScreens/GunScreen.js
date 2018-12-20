@@ -19,7 +19,10 @@ const mapDispatchToProps = (dispatch) => ({
   buyBulletMachine: () => dispatch({ type: Actions.BUY_BULLET_MACHINE }),
   buyBulletFactory: () => dispatch({ type: Actions.BUY_BULLET_FACTORY }),
 
-  bulletFactoryIncrement: () => dispatch({ type: Actions.COUNTER_FACTORY_INCREMENT }),
+  incrementFive: () => dispatch({ type: Actions.COUNTER_INCREMENT_FIVE }),
+  incrementTen: () => dispatch({ type: Actions.COUNTER_INCREMENT_TEN }),
+  incrementFifteen: () => dispatch({ type: Actions.COUNTER_INCREMENT_FIFTEEN }),
+  incrementTwenty: () => dispatch({ type: Actions.COUNTER_INCREMENT_TWENTY }),
   increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
   decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
 });
@@ -35,15 +38,12 @@ class GunComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    
+
     const callCountUpMachine = setInterval(this.countUpMachine, 1000);
     const callCountUpFactory = setInterval(this.countUpFactory, 1000);
 
     this._onPress = this._onPress.bind(this);
 
-    this.state = {
-      data: bulletMachineData,
-    };
   }
 
   _onPress = (e) => {
@@ -52,8 +52,6 @@ class GunComponent extends React.Component {
 
         if (this.props.count >= this.props.priceOfBulletMachine) {
           this.props.buyBulletMachine()
-
-          this.callCountUpMachine
 
           for (let i = 0; i < this.props.priceOfBulletMachine; i++) {
             this.props.decrement();
@@ -71,8 +69,6 @@ class GunComponent extends React.Component {
 
         if (this.props.count >= this.props.priceOfBulletFactory) {
           this.props.buyBulletFactory()
-
-          this.callCountUpFactory
 
           for (let i = 0; i < this.props.priceOfBulletFactory; i++) {
             this.props.decrement();
@@ -92,15 +88,37 @@ class GunComponent extends React.Component {
   };
 
   countUpMachine = () => {
-    for (let i = 0; i < this.props.bulletMachinesBought; i++) {
-      this.props.increment();
+    if (this.props.bulletMachinesBought < 5) {
+      for (let i = 0; i < this.props.bulletMachinesBought; i++) {
+        this.props.increment();
+        console.log('triggered1')
+      }
+    } else if (this.props.bulletMachinesBought > 4) {
+      for (let i = 0; Math.round(i < this.props.bulletMachinesBought / 5); i++) {
+        this.props.incrementFive();
+        console.log('triggered2')
+      }
+    } else if (this.props.bulletMachinesBought > 9) {
+      for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 10); i++) {
+        this.props.incrementTen();
+        console.log('triggered3')
+      }
     }
   }
 
   countUpFactory = () => {
-    console.log(this.props.bulletFactoriesBought)
-    for (let i = 0; i < this.props.bulletFactoriesBought; i++) {
-      this.props.bulletFactoryIncrement();
+    if (this.props.bulletFactoriesBought < 5) {
+      for (let i = 0; i < this.props.bulletFactoriesBought; i++) {
+        this.props.incrementFive();
+      }
+    } else if (this.props.bulletFactoriesBought > 4) {
+      for (let i = 0; Math.round(i < this.props.bulletFactoriesBought / 5); i++) {
+        this.props.incrementTen();
+      }
+    } else if (this.props.bulletFactoriesBought > 9) {
+      for (let i = 0; i < Math.round(this.props.bulletFactoriesBought / 10); i++) {
+        this.props.incrementFifteen();
+      }
     }
   }
 

@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   text: {
-    fontSize: 30,
+    fontSize: 20,
   }
 });
 
