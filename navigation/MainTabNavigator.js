@@ -1,8 +1,8 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import Platform from 'react-native';
 
-import TabBarIcon from '../components/TabBarIcon';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -10,59 +10,76 @@ import SpaceshipScreen from '../screens/storeScreens/SpaceshipScreen';
 import GunScreen from '../screens/storeScreens/GunScreen'
 import GameScreen from '../screens/GameScreen'
 
-const HomeStack = createStackNavigator({
+const Home = createStackNavigator({
   Home: HomeScreen,
   Game: GameScreen,
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+Home.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+
+  showIcon = true;
+
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
 };
 
-const LinksStack = createStackNavigator({
+const Links = createStackNavigator({
   Links: LinksScreen,
   gunStore: GunScreen,
   spaceshipStore: SpaceshipScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Store',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
-};
-
-const SettingsStack = createStackNavigator({
+const Settings = createStackNavigator({
   Settings: SettingsScreen,
 });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  ),
-};
-
-
-
 export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
-});
+  Home,
+  Links,
+  Settings,
+},
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `ios-information-circle${focused ? '' : '-outline'}`
+        } else if (routeName === 'Links') {
+          iconName = `ios-options${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Settings') {
+          iconName = `ios-options${focused ? '' : '-outline'}`;
+        }
+        return <Ionicons name={iconName} color={tintColor} size={Platform.OS === "ios" ? 28 : 20}/>;
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+      fontSize: 12,
+    },
+  });
+
+
+/*
+HomeStack.navigationOptions = {
+tabBarLabel: 'Home',
+tabBarVisible: true,
+
+tabBarIcon: ({ focused }) => (
+  <TabBarIcon
+    focused={focused}
+    name={
+      Platform.OS === 'ios'
+        ? `ios-information-circle${focused ? '' : '-outline'}`
+        : 'md-information-circle'
+    }
+  />
+),
+}*/

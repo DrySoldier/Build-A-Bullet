@@ -24,6 +24,7 @@ class GameScreen extends React.Component {
     static navigationOptions = {
         header: null,
         tabBarVisible: false,
+        gesturesEnabled: false,
     }
 
     constructor(props) {

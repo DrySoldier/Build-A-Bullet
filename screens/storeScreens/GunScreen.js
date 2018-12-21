@@ -160,7 +160,7 @@ class GunComponent extends React.Component {
 
           <Card
             title='Bullet Factory'
-            image={require('../../assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png')}
+            image={require('../../assets/images/silverBullets.png')}
             containerStyle={{ padding: 0, width: device_width * .91, height: device_height * .69 }}
           >
             <Button title="Buy Now!" onPress={() => this._onPress('checkCanBuyBulletFactory')} />
