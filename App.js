@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
+import { Loop, Stage } from 'react-game-kit/native';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from 'react-redux';
 import store from './redux/Reducers/index';
@@ -27,11 +28,14 @@ export default class App extends React.Component {
       );
     } else {
       return (
+
         <Provider store={store}>
+          <Loop>
             <View style={styles.container}>
               {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
               <AppNavigator />
             </View>
+          </Loop>
         </Provider>
       );
     }
@@ -44,7 +48,8 @@ export default class App extends React.Component {
         require('./assets/images/robot-prod.png'),
         require('./assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png'),
         require('./assets/images/launchButton-logo-big.jpg'),
-        require('./assets/images/silverBullets.png')
+        require('./assets/images/silverBullets.png'),
+        require('./assets/spriteSheet/Ships/Lightning.png')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar

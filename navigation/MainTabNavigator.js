@@ -65,21 +65,3 @@ export default createBottomTabNavigator({
       fontSize: 12,
     },
   });
-
-
-/*
-HomeStack.navigationOptions = {
-tabBarLabel: 'Home',
-tabBarVisible: true,
-
-tabBarIcon: ({ focused }) => (
-  <TabBarIcon
-    focused={focused}
-    name={
-      Platform.OS === 'ios'
-        ? `ios-information-circle${focused ? '' : '-outline'}`
-        : 'md-information-circle'
-    }
-  />
-),
-}*/
