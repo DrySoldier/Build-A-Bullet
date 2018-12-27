@@ -44,10 +44,8 @@ export default class App extends React.Component {
   _loadResourcesAsync = async () => {
     return Promise.all([
       Asset.loadAsync([
-        require('./assets/images/robot-dev.png'),
-        require('./assets/images/robot-prod.png'),
-        require('./assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png'),
-        require('./assets/images/launchButton-logo-big.jpg'),
+        require('./assets/images/pixelBullet.png'),
+        require('./assets/images/pixelLaunch.jpg'),
         require('./assets/images/silverBullets.png'),
         require('./assets/spriteSheet/Ships/Lightning.png')
       ]),

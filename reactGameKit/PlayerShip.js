@@ -2,7 +2,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { Sprite } from 'react-game-kit/native';
 
-
 class Ship extends React.Component {
 
     constructor(props) {

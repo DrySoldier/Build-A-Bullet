@@ -56,13 +56,13 @@ class HomeScreen extends React.Component {
         <Text style={{fontSize: 60}}>{this.props.count}</Text>
 
         <TouchableOpacity onPress={this.props.increment}>
-          <Image source={require('../assets/images/PNGPIX-COM-Bullet-PNG-Transparent-Image-1-500x373.png')} style={{resizeMode: 'contain', width: device_width}}/>
+          <Image source={require('../assets/images/pixelBullet.png')} style={{resizeMode: 'contain', width: device_width}}/>
         </TouchableOpacity>
 
         <Text style={{flex: 1}}></Text>
 
         <TouchableOpacity onPress={this._onPressPlay} style={styles.launchButtonBorder}>
-          <Image source={require('../assets/images/launchButton-logo-big.jpg')} style={{height: device_height*.4, width: device_width*.7}} />
+          <Image source={require('../assets/images/pixelLaunch.jpg')} style={{height: device_height*.4, width: device_width*.7}} />
         </TouchableOpacity>
 
       </View>

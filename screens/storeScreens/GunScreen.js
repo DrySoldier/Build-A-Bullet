@@ -95,27 +95,27 @@ class GunComponent extends React.Component {
     if (this.props.bulletMachinesBought < 4) {
       for (let i = 0; i < this.props.bulletMachinesBought; i++) {
         this.props.increment();
-        console.log('triggered1')
+
       }
     } else if (this.props.bulletMachinesBought < 9) {
       for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 10); i++) {
         this.props.incrementFive();
-        console.log('triggered2')
+
       }
     } else if (this.props.bulletMachinesBought < 14) {
       for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 15); i++) {
         this.props.incrementTen();
-        console.log('triggered3')
+
       }
     } else if (this.props.bulletMachinesBought < 19) {
       for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 20); i++) {
         this.props.incrementFifteen();
-        console.log('triggered4')
+
       }
     } else if (this.props.bulletMachinesBought < 24) {
       for (let i = 0; i < Math.round(this.props.bulletMachinesBought / 25); i++) {
         this.props.incrementTwenty();
-        console.log('triggered5')
+
       }
     }
   }
