@@ -18,8 +18,6 @@ const Home = createStackNavigator({
 Home.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
 
-  showIcon = true;
-
   if (navigation.state.index > 0) {
     tabBarVisible = false;
   }

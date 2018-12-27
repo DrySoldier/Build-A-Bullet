@@ -15,12 +15,14 @@ import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
 
 const mapStateToProps = (state) => ({
-  count: state.counterReducer.count
+  count: state.counterReducer.count,
+
+  fuel: state.fuelReducer.fuel
 });
 
 const mapDispatchToProps = (dispatch) => ({
- increment: () => dispatch({type: Actions.COUNTER_INCREMENT}),
- decrement: () => dispatch({type: Actions.COUNTER_DECREMENT}),
+  increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
+  decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
 });
 
 const device_width = Dimensions.get('window').width;
@@ -53,16 +55,18 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.bulletContainer}>
 
-        <Text style={{fontSize: 60}}>{this.props.count}</Text>
+        <Text style={{ fontSize: 60 }}>{this.props.count}</Text>
 
         <TouchableOpacity onPress={this.props.increment}>
-          <Image source={require('../assets/images/pixelBullet.png')} style={{resizeMode: 'contain', width: device_width}}/>
+          <Image source={require('../assets/images/pixelBullet.png')} style={{ resizeMode: 'contain', width: device_width }} />
         </TouchableOpacity>
 
-        <Text style={{flex: 1}}></Text>
+        <Text style={{ flex: 1 }}></Text>
+
+        <Text style={{ fontSize: 60 }}>{this.props.fuel}/100</Text>
 
         <TouchableOpacity onPress={this._onPressPlay} style={styles.launchButtonBorder}>
-          <Image source={require('../assets/images/pixelLaunch.jpg')} style={{height: device_height*.4, width: device_width*.7}} />
+          <Image source={require('../assets/images/pixelLaunch.jpg')} style={{ height: device_height * .4, width: device_width * .7 }} />
         </TouchableOpacity>
 
       </View>
