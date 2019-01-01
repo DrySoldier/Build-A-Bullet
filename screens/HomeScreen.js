@@ -13,6 +13,7 @@ import {
 
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
+import { Button } from 'react-native-elements';
 
 const mapStateToProps = (state) => ({
   count: state.counterReducer.count,
@@ -23,6 +24,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   increment: () => dispatch({ type: Actions.COUNTER_INCREMENT }),
   decrement: () => dispatch({ type: Actions.COUNTER_DECREMENT }),
+
+  incrementFuel: () => dispatch({ type: Actions.INCREMENT_FUEL })
 });
 
 const device_width = Dimensions.get('window').width;
@@ -40,15 +43,19 @@ class HomeScreen extends React.Component {
   }
 
   _onPressPlay = () => {
-    Alert.alert(
-      'Start Game?',
-      'Would you like to start the game?',
-      [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'OK', onPress: () => this.props.navigation.navigate('Game')},
-      ],
-      { cancelable: false }
-    )
+    if(this.props.fuel == 0){
+      Alert.alert("You don't have enough fuel for an expedition!")
+    }else{
+      Alert.alert(
+        'Start Game?',
+        'Would you like to start the game?',
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'OK', onPress: () => this.props.navigation.navigate('Game')},
+        ],
+        { cancelable: false }
+      )
+    }
   }
 
   render() {
@@ -62,6 +69,8 @@ class HomeScreen extends React.Component {
         </TouchableOpacity>
 
         <Text style={{ flex: 1 }}></Text>
+
+        <Button onPress={this.props.incrementFuel}></Button>
 
         <Text style={{ fontSize: 60 }}>{this.props.fuel}/100</Text>
 

@@ -1,6 +1,6 @@
 import * as Actions from '../Actions/ActionTypes'
 
-const FuelReducer = (state = { fuel: 100 }, action) => {
+const FuelReducer = (state = { fuel: 1 }, action) => {
     switch (action.type) {
         case Actions.INCREMENT_FUEL:
             return Object.assign({}, state, {

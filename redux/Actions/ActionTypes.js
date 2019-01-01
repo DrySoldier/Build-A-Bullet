@@ -12,5 +12,7 @@ export const COUNTER_INCREMENT_FORTY = 'counter_increment_forty';
 export const INCREMENT_FUEL = 'increment_fuel';
 export const DECREMENT_FUEL = 'decrement_fuel';
 
+export const GAME_OVER = 'game_over'
+
 export const BUY_BULLET_MACHINE = 'buy_bullet_machine';
 export const BUY_BULLET_FACTORY = 'buy_bullet_factory';
