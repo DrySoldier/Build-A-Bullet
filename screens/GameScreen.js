@@ -94,7 +94,10 @@ class GameScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                {this.state.boss}
+                {//this.state.boss
+                }
+
+                <Boss1/>
             </View>
         );
     }

@@ -1,8 +1,7 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import Platform from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -43,23 +42,25 @@ export default createBottomTabNavigator({
   Settings,
 },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        let iconName;
         if (routeName === 'Home') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`
+          return <Image source={focused ? require('../assets/images/game_tab_icon.png') : require('../assets/images/game_tab_icon.png')}
+            style={{ height: 25, width: 25 }} />;
         } else if (routeName === 'Links') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
+          return <Image source={focused ? require('../assets/images/game_tab_icon.png') : require('../assets/images/game_tab_icon.png')}
+            style={{ height: 25, width: 25 }} />;
         } else if (routeName === 'Settings') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
+          return <Image source={focused ? require('../assets/images/game_tab_icon.png') : require('../assets/images/game_tab_icon.png')}
+            style={{ height: 25, width: 25 }} />;
         }
-        return <Ionicons name={iconName} color={tintColor} size={Platform.OS === "ios" ? 28 : 20}/>;
       },
     }),
     tabBarOptions: {
-      activeTintColor: 'tomato',
+      activeTintColor: '#6e73ff',
       inactiveTintColor: 'gray',
-      fontSize: 12,
+      labelStyle: { fontWeight: 'bold' }
     },
-  });
+  }
+);

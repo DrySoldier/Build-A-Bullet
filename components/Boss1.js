@@ -6,6 +6,8 @@ import EnemyShip from './EnemyShip';
 
 import PropTypes from 'prop-types';
 
+import ImageLoader from '../components/ImageLoader';
+
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
 
@@ -54,7 +56,7 @@ class Boss1 extends React.Component {
 
             // enemy states
             enemyLeftPosition: this.randomIntFromInterval(0, device_width),
-            enemyTopPosition: -50,
+            enemyTopPosition: -100,
             enemies: [],
             waveNumber: 0,
             currentEnemyAmount: 50,
@@ -85,7 +87,7 @@ class Boss1 extends React.Component {
     componentDidMount() {
         this.context.loop.subscribe(this.update);
 
-        this.interval = setInterval(function () { generateEnemy() }, 5);
+        this.interval = setInterval(function () { generateEnemy() }, 100);
 
     }
 
@@ -93,6 +95,8 @@ class Boss1 extends React.Component {
 
     componentWillUnmount() {
         this.context.loop.unsubscribe(this.update);
+
+        clearInterval(this.interval);
     }
 
     // random num generator for randomly placed enemies
@@ -133,19 +137,10 @@ class Boss1 extends React.Component {
     // user input for fight
 
     handlePress = (evt) => {
-
-        /* console.log("enemy array" + this.state.enemies)
-         console.log("i" + this.state.i)
-         console.log("wave number" + this.state.waveNumber)
-         console.log("gamestate" +this.state.gameState)
-         console.log("enemy top position" +this.state.enemyTopPosition)
-         console.log("triggered" +this.state.triggered)*/
-
+    
         if (this.state.gameState == 1) {
             this.setState({ leftPosition: evt.nativeEvent.locationX - 15 });
             this.setState({ topPosition: evt.nativeEvent.locationY });
-
-            this.view.transitionTo({ opacity: 0.2 })
 
             if (this.props.fuel != 0) {
                 this.props.decrementFuel();
@@ -205,7 +200,7 @@ class Boss1 extends React.Component {
 
             this.setState({ topBossPosition: this.state.topBossPosition - 10 });
 
-            this.setState({ enemyTopPosition: this.state.enemyTopPosition + 10 })
+            this.setState({ enemyTopPosition: this.state.enemyTopPosition + 5 })
 
             this.setState({ lastTouchPosition: ["X: " + this.state.leftPosition, "Y: " + this.state.topPosition] });
 
@@ -242,7 +237,7 @@ class Boss1 extends React.Component {
 
             }
 
-            if (!this.state.bossAppearing) {
+            if (!this.state.bossAppearing && this.state.gameState != 3) {
 
                 this.setState({ bossAppearing: true });
 
@@ -266,8 +261,6 @@ class Boss1 extends React.Component {
 
         generateEnemy = () => {
 
-            // number of enemies = 125 as of right now
-
             if (this.state.enemies.length < this.state.currentEnemyAmount && this.state.gameState == 1) {
 
                 this.setState({ i: this.state.i + 1 });
@@ -276,24 +269,26 @@ class Boss1 extends React.Component {
 
                 this.setState({
                     enemies: [...this.state.enemies,
+
                     <TouchableOpacity activeOpacity={1}>
-                        <View onLayout={(event) => { this.find_dimesionsOfEnemy(event.nativeEvent.layout) }}
+                        <ImageLoader onLayout={(event) => { this.find_dimesionsOfEnemy(event.nativeEvent.layout) }}
                             key={this.state.i}
                             style={{
                                 top: this.state.enemyTopPosition,
                                 left: this.randomIntFromInterval(0, device_width),
-                                height: 50,
-                                width: 15,
+                                height: 100,
+                                width: 40,
                                 backgroundColor: 'purple',
                                 position: "absolute",
                                 borderRadius: 25,
                                 zIndex: 1,
-                            }}>
-                        </View>
-                    </TouchableOpacity>]
+                            }}
+                            source={{ uri: 'https://art.pixilart.com/6867567d515ebe4.png' }} />
+                    </TouchableOpacity>
+                    ]
                 });
 
-            } else if (this.state.waveNumber == 5) {
+            } else if (this.state.waveNumber == 5 && this.state.gameState != 3) {
 
                 this.setState({ enemies: [] });
                 this.setState({ enemyTopPosition: -10 });
@@ -303,60 +298,57 @@ class Boss1 extends React.Component {
 
                 this.setState({ gameState: 2 });
 
-            } else {
+            } else if(this.state.gameState != 0 ){
 
-                if (this.state.enemies.length > this.state.currentEnemyAmount) {
-                    this.setState({ waveNumber: this.state.waveNumber + 1 })
-                }
+                this.setState({ waveNumber: this.state.waveNumber + 1 })
 
                 this.setState({ enemies: [] });
                 this.setState({ enemyTopPosition: -10 });
                 this.setState({ i: 0 });
                 this.setState({ dimensionsOfRectX: [] });
                 this.setState({ dimensionsOfRectY: [] });
+
             }
         }
 
         return (
             <TouchableOpacity activeOpacity={1} onPress={(evt) => this.handlePress(evt)} style={styles.container} >
                 <Stage width={device_width} height={device_height} >
-                    <Animatable.View ref={this.handleViewRef}>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            position: 'absolute'
-                        }}>
-                            <TouchableOpacity activeOpacity={1}>
-                                <Text style={styles.text}>{this.props.count}</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity activeOpacity={1}>
-                                <Text style={styles.text}>{this.props.fuel}/100</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => this.setState({ bossHealth: this.state.bossHealth - 100 })}
-                            activeOpacity={.5} style={{
-                                top: this.state.topBossPosition,
-                                left: this.state.leftBossPosition,
-                                position: 'absolute',
-                            }}>
-                            <EnemyShip />
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        position: 'absolute'
+                    }}>
+                        <TouchableOpacity activeOpacity={1}>
+                            <Text style={styles.text}>{this.props.count}</Text>
                         </TouchableOpacity>
 
-                        {this.state.enemies}
+                        <TouchableOpacity activeOpacity={1}>
+                            <Text style={styles.text}>{this.props.fuel}/100</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => this.setState({ bossHealth: this.state.bossHealth - 100 })}
+                        activeOpacity={.5} style={{
+                            top: this.state.topBossPosition,
+                            left: this.state.leftBossPosition,
+                            position: 'absolute',
+                        }}>
+                        <EnemyShip />
+                    </TouchableOpacity>
 
-                        <View animation="fadeIn">
-                            <TouchableOpacity
-                                activeOpacity={1} style={{
-                                    top: this.state.topPosition,
-                                    left: this.state.leftPosition,
-                                    position: 'absolute',
-                                }}>
-                                <PlayerShip ref={this.handleTextRef} />
-                            </TouchableOpacity>
-                        </View>
-                    </Animatable.View>
+                    {this.state.enemies}
+
+                    <View animation="fadeIn">
+                        <TouchableOpacity
+                            activeOpacity={1} style={{
+                                top: this.state.topPosition,
+                                left: this.state.leftPosition,
+                                position: 'absolute',
+                            }}>
+                            <PlayerShip ref={this.handleTextRef} />
+                        </TouchableOpacity>
+                    </View>
                 </Stage>
             </TouchableOpacity>
         );
