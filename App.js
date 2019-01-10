@@ -47,7 +47,8 @@ export default class App extends React.Component {
         require('./assets/images/pixelBullet.png'),
         require('./assets/images/pixelLaunch.jpg'),
         require('./assets/images/silverBullets.png'),
-        require('./assets/spriteSheet/Ships/Lightning.png')
+        require('./assets/spriteSheet/Ships/Lightning.png'),
+        require('./assets/images/game_tab_icon.png')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar

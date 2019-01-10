@@ -5,6 +5,7 @@ import bulletMachineReducer from './BulletMachineReducer';
 import bulletFactoryReducer from './BulletFactoryReducer';
 import fuelReducer from './FuelReducer';
 import gameReducer from './GameReducer';
+import animationReducer from './AnimationReducer';
 
 const AppReducers = combineReducers({
     counterReducer,
@@ -12,6 +13,7 @@ const AppReducers = combineReducers({
     bulletFactoryReducer,
     fuelReducer,
     gameReducer,
+    animationReducer,
 });
 
 

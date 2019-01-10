@@ -16,7 +16,9 @@ const mapStateToProps = (state) => ({
 
     fuel: state.fuelReducer.fuel,
 
-    gameOver: state.gameReducer.gameOver
+    gameOver: state.gameReducer.gameOver,
+
+    loadAnimation: state.animationReducer.loadAnimation,
 
 });
 
@@ -27,14 +29,13 @@ const mapDispatchToProps = (dispatch) => ({
     decrementFuel: () => dispatch({ type: Actions.DECREMENT_FUEL }),
 
     toggleGameOver: () => dispatch({ type: Actions.GAME_OVER }),
+    toggleLoadAnimation: () => dispatch({ type: Actions.LOAD_ANIMATION }),
 });
 
 const device_height = Dimensions.get('window').height;
 const device_width = Dimensions.get('window').width;
 
 class Boss1 extends React.Component {
-
-    handleViewRef = ref => this.view = ref;
 
     static contextTypes = {
         loop: PropTypes.object,
@@ -59,7 +60,7 @@ class Boss1 extends React.Component {
             enemyTopPosition: -100,
             enemies: [],
             waveNumber: 0,
-            currentEnemyAmount: 50,
+            currentEnemyAmount: 25,
 
             dimensionsOfRectX: [],
             dimensionsOfRectY: [],
@@ -137,7 +138,7 @@ class Boss1 extends React.Component {
     // user input for fight
 
     handlePress = (evt) => {
-    
+
         if (this.state.gameState == 1) {
             this.setState({ leftPosition: evt.nativeEvent.locationX - 15 });
             this.setState({ topPosition: evt.nativeEvent.locationY });
@@ -200,7 +201,7 @@ class Boss1 extends React.Component {
 
             this.setState({ topBossPosition: this.state.topBossPosition - 10 });
 
-            this.setState({ enemyTopPosition: this.state.enemyTopPosition + 5 })
+            this.setState({ enemyTopPosition: this.state.enemyTopPosition + 10 })
 
             this.setState({ lastTouchPosition: ["X: " + this.state.leftPosition, "Y: " + this.state.topPosition] });
 
@@ -213,6 +214,7 @@ class Boss1 extends React.Component {
                     this.state.dimensionsOfRectX[i] + this.state.dimensionsOfRectWidth[i] + 7 > this.state.leftPosition && // left collision
                     this.state.dimensionsOfRectX[i] - 40 < this.state.leftPosition) { // right collision
 
+                    // what happens if hit
                     this.setState({ topPosition: 20000 })
 
                 }
@@ -243,7 +245,7 @@ class Boss1 extends React.Component {
 
                 this.timeout1 = setTimeout(timeout1 = () => { this.beginningOfBossBattle() }, 2000);
 
-                this.setState({ topBossPosition: -100 })
+                this.setState({ topBossPosition: -150 })
 
             }
 
@@ -254,6 +256,18 @@ class Boss1 extends React.Component {
         }
 
     };
+
+    exitAnimation = () => {
+        if (this.props.loadAnimation) {
+            this.props.toggleLoadAnimation();
+            this.setState({ waveNumber: this.state.waveNumber + 1 })
+
+            this.timeout2 = setTimeout(timeout2 = () => {
+                this.setState({ enemies: [] });
+                this.props.toggleLoadAnimation();
+            }, 500);
+        }
+    }
 
     render() {
 
@@ -290,19 +304,20 @@ class Boss1 extends React.Component {
 
             } else if (this.state.waveNumber == 5 && this.state.gameState != 3) {
 
-                this.setState({ enemies: [] });
+                this.exitAnimation();
+
                 this.setState({ enemyTopPosition: -10 });
                 this.setState({ i: 0 });
                 this.setState({ dimensionsOfRectX: [] });
                 this.setState({ dimensionsOfRectY: [] });
 
+                // comment this to set boss to never appear
                 this.setState({ gameState: 2 });
 
-            } else if(this.state.gameState != 0 ){
+            } else if (this.state.gameState != 0) {
 
-                this.setState({ waveNumber: this.state.waveNumber + 1 })
+                this.exitAnimation();
 
-                this.setState({ enemies: [] });
                 this.setState({ enemyTopPosition: -10 });
                 this.setState({ i: 0 });
                 this.setState({ dimensionsOfRectX: [] });

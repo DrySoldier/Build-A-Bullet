@@ -6,6 +6,8 @@ import EnemyShip from './EnemyShip';
 
 import PropTypes from 'prop-types';
 
+import ImageLoader from '../components/ImageLoader';
+
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
 
@@ -265,7 +267,7 @@ class Boss2 extends React.Component {
                 this.setState({
                     enemies: [...this.state.enemies,
                     <TouchableOpacity activeOpacity={1}>
-                        <View onLayout={(event) => { this.find_dimesionsOfEnemy(event.nativeEvent.layout) }}
+                        <ImageLoader onLayout={(event) => { this.find_dimesionsOfEnemy(event.nativeEvent.layout) }}
                             key={this.state.i}
                             style={{
                                 top: 300,
@@ -275,7 +277,7 @@ class Boss2 extends React.Component {
                                 backgroundColor: 'purple',
                                 position: "absolute",
                             }}>
-                        </View>
+                        </ImageLoader>
                     </TouchableOpacity>]
                 });
 
