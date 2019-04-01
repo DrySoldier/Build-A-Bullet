@@ -18,8 +18,10 @@
     "react-animated-number": "^0.4.4",
     "react-game-kit": "^1.0.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react-native-blur": "^3.2.2",
     "react-native-elements": "^0.19.1",
-    "react-native-game-engine": "^0.10.1",
+    "react-native-overlay": "^0.5.0",
+    "react-native-typewriter": "^0.5.4",
     "react-navigation": "^2.18.3",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1"

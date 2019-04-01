@@ -14,7 +14,11 @@ export const DECREMENT_FUEL = 'decrement_fuel';
 
 export const LOAD_ANIMATION = 'load_animation';
 
-export const GAME_OVER = 'game_over'
+export const DECREASE_DELAY = 'decrease_delay';
+export const DEFAULT_DELAY = 'default_delay';
+export const DEFAULT_LOW_DELAY = 'default_low_delay';
+
+export const GAME_OVER = 'game_over';
 
 export const BUY_BULLET_MACHINE = 'buy_bullet_machine';
 export const BUY_BULLET_FACTORY = 'buy_bullet_factory';

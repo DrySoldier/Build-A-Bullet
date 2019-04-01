@@ -1,6 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Alert, Animated } from 'react-native';
+import { BlurView } from 'expo';
+
 import { Stage } from 'react-game-kit/native';
+import TypeWriter from 'react-native-typewriter';
+
 import PlayerShip from './PlayerShip';
 import EnemyShip from './EnemyShip';
 
@@ -20,6 +24,8 @@ const mapStateToProps = (state) => ({
 
     loadAnimation: state.animationReducer.loadAnimation,
 
+    currentDelay: state.animationReducer.currentDelay
+
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -30,6 +36,10 @@ const mapDispatchToProps = (dispatch) => ({
 
     toggleGameOver: () => dispatch({ type: Actions.GAME_OVER }),
     toggleLoadAnimation: () => dispatch({ type: Actions.LOAD_ANIMATION }),
+
+    decreaseDelay: () => dispatch({ type: Actions.DECREASE_DELAY }),
+    defaultDelay: () => dispatch({ type: Actions.DEFAULT_DELAY }),
+    defaultLowDelay: () => dispatch({ type: Actions.DEFAULT_LOW_DELAY }),
 });
 
 const device_height = Dimensions.get('window').height;
@@ -60,7 +70,7 @@ class Boss1 extends React.Component {
             enemyTopPosition: -100,
             enemies: [],
             waveNumber: 0,
-            currentEnemyAmount: 25,
+            currentEnemyAmount: 35,
 
             dimensionsOfRectX: [],
             dimensionsOfRectY: [],
@@ -69,10 +79,6 @@ class Boss1 extends React.Component {
 
             // key
             i: 0,
-
-            // not used
-            lastTouchPosition: [0, 0],
-
 
             // game states
             gameState: 0,
@@ -111,10 +117,12 @@ class Boss1 extends React.Component {
     find_dimesionsOfEnemy(layout) {
         const { x, y, width, height } = layout;
 
-        this.setState({ dimensionsOfRectX: [...this.state.dimensionsOfRectX, x] })
-        this.setState({ dimensionsOfRectY: [...this.state.dimensionsOfRectY, y] })
-        this.setState({ dimensionsOfRectHeight: [...this.state.dimensionsOfRectHeight, height] })
-        this.setState({ dimensionsOfRectWidth: [...this.state.dimensionsOfRectWidth, width] })
+        this.setState({
+            dimensionsOfRectY: [...this.state.dimensionsOfRectY, y],
+            dimensionsOfRectX: [...this.state.dimensionsOfRectX, x],
+            dimensionsOfRectHeight: [...this.state.dimensionsOfRectHeight, height],
+            dimensionsOfRectWidth: [...this.state.dimensionsOfRectWidth, width]
+        });
 
     }
     // first function
@@ -140,8 +148,10 @@ class Boss1 extends React.Component {
     handlePress = (evt) => {
 
         if (this.state.gameState == 1) {
-            this.setState({ leftPosition: evt.nativeEvent.locationX - 15 });
-            this.setState({ topPosition: evt.nativeEvent.locationY });
+            this.setState({
+                leftPosition: evt.nativeEvent.locationX - 15,
+                topPosition: evt.nativeEvent.locationY
+            });
 
             if (this.props.fuel != 0) {
                 this.props.decrementFuel();
@@ -163,8 +173,10 @@ class Boss1 extends React.Component {
             [
                 {
                     text: 'OK', onPress: () => this.interval3 = setInterval(interval3 = () => {
-                        this.setState({ topBossPosition: this.randomIntFromInterval(200, device_height) })
-                        this.setState({ leftBossPosition: this.randomIntFromInterval(0, device_width) })
+                        this.setState({
+                            topBossPosition: this.randomIntFromInterval(200, device_height),
+                            leftBossPosition: this.randomIntFromInterval(0, device_width)
+                        })
                     }, 2000)
                 },
             ],
@@ -199,11 +211,10 @@ class Boss1 extends React.Component {
 
         } else if (this.state.gameState == 1) {
 
-            this.setState({ topBossPosition: this.state.topBossPosition - 10 });
-
-            this.setState({ enemyTopPosition: this.state.enemyTopPosition + 10 })
-
-            this.setState({ lastTouchPosition: ["X: " + this.state.leftPosition, "Y: " + this.state.topPosition] });
+            this.setState({
+                enemyTopPosition: this.state.enemyTopPosition + 12,
+                topBossPosition: this.state.topBossPosition - 10
+            })
 
             for (let i = 0; i < this.state.enemies.length; i++) {
 
@@ -241,11 +252,12 @@ class Boss1 extends React.Component {
 
             if (!this.state.bossAppearing && this.state.gameState != 3) {
 
-                this.setState({ bossAppearing: true });
-
                 this.timeout1 = setTimeout(timeout1 = () => { this.beginningOfBossBattle() }, 2000);
 
-                this.setState({ topBossPosition: -150 })
+                this.setState({
+                    topBossPosition: -150,
+                    bossAppearing: true
+                });
 
             }
 
@@ -273,15 +285,14 @@ class Boss1 extends React.Component {
 
         // generate enemy function
 
-        generateEnemy = () => {
+        generateEnemy = async () => {
 
             if (this.state.enemies.length < this.state.currentEnemyAmount && this.state.gameState == 1) {
-
-                this.setState({ i: this.state.i + 1 });
 
                 // create enemy view
 
                 this.setState({
+                    i: this.state.i + 1,
                     enemies: [...this.state.enemies,
 
                     <TouchableOpacity activeOpacity={1}>
@@ -297,43 +308,59 @@ class Boss1 extends React.Component {
                                 borderRadius: 25,
                                 zIndex: 1,
                             }}
-                            source={{ uri: 'https://art.pixilart.com/6867567d515ebe4.png' }} />
+                            source={require('../assets/images/enemyBullet.png')}
+                        />
                     </TouchableOpacity>
                     ]
                 });
+
+                if (this.props.currentDelay > 1) {
+                    this.props.decreaseDelay();
+                } else {
+                    this.props.defaultLowDelay();
+                }
+
+                /*for (let i = 0; i < this.state.enemies.length; i++) {
+                    if(this.state.dimensionsOfRectX[i] < this.state.dimensionsOfRectX[i] - 1){
+                        this.setState({ dimensionsOfRectX: [...this.state.dimensionsOfRectX[i] - 1, this.state.dimensionsOfRectX[i] + 10 ]});
+                    }
+                }*/
 
             } else if (this.state.waveNumber == 5 && this.state.gameState != 3) {
 
                 this.exitAnimation();
 
-                this.setState({ enemyTopPosition: -10 });
-                this.setState({ i: 0 });
-                this.setState({ dimensionsOfRectX: [] });
-                this.setState({ dimensionsOfRectY: [] });
+                this.setState({
+                    i: 0,
+                    enemyTopPosition: -10,
+                    dimensionsOfRectX: [],
+                    dimensionsOfRectY: []
+                });
 
                 // comment this to set boss to never appear
-                this.setState({ gameState: 2 });
+                // this.setState({ gameState: 2 });
 
             } else if (this.state.gameState != 0) {
 
                 this.exitAnimation();
 
-                this.setState({ enemyTopPosition: -10 });
-                this.setState({ i: 0 });
-                this.setState({ dimensionsOfRectX: [] });
-                this.setState({ dimensionsOfRectY: [] });
+                this.props.defaultDelay();
 
+                this.setState({
+                    i: 0,
+                    enemyTopPosition: -10,
+                    dimensionsOfRectX: [],
+                    dimensionsOfRectY: []
+                });
             }
         }
 
         return (
-            <TouchableOpacity activeOpacity={1} onPress={(evt) => this.handlePress(evt)} style={styles.container} >
+            <TouchableOpacity activeOpacity={1} onPress={(evt) => this.handlePress(evt)} style={styles.container}  >
                 <Stage width={device_width} height={device_height} >
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        position: 'absolute'
-                    }}>
+
+                    <BlurView style={styles.infoContainer} intensity={50} tint="dark">
+
                         <TouchableOpacity activeOpacity={1}>
                             <Text style={styles.text}>{this.props.count}</Text>
                         </TouchableOpacity>
@@ -341,7 +368,9 @@ class Boss1 extends React.Component {
                         <TouchableOpacity activeOpacity={1}>
                             <Text style={styles.text}>{this.props.fuel}/100</Text>
                         </TouchableOpacity>
-                    </View>
+
+                    </BlurView>
+
                     <TouchableOpacity
                         onPress={() => this.setState({ bossHealth: this.state.bossHealth - 100 })}
                         activeOpacity={.5} style={{
@@ -354,16 +383,15 @@ class Boss1 extends React.Component {
 
                     {this.state.enemies}
 
-                    <View animation="fadeIn">
-                        <TouchableOpacity
-                            activeOpacity={1} style={{
-                                top: this.state.topPosition,
-                                left: this.state.leftPosition,
-                                position: 'absolute',
-                            }}>
-                            <PlayerShip ref={this.handleTextRef} />
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        activeOpacity={1} style={{
+                            top: this.state.topPosition,
+                            left: this.state.leftPosition,
+                            position: 'absolute',
+                        }}>
+                        <PlayerShip />
+                    </TouchableOpacity>
+
                 </Stage>
             </TouchableOpacity>
         );
@@ -374,16 +402,23 @@ class Boss1 extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
         position: 'relative',
     },
+    infoContainer: {
+        width: device_width,
+        height: 100,
+        position: 'absolute',
+        backgroundColor: 'green',
+        zIndex: 99,
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+        position: 'absolute',
+    },
     text: {
-        paddingTop: 20,
         fontSize: 40,
-        paddingLeft: 40,
         color: 'white',
-        backgroundColor: 'black',
-        zIndex: 99
+        paddingTop: device_height * .05,
     },
     enemy: {
         height: 100,

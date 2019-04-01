@@ -7,6 +7,7 @@ import * as Actions from '../redux/Actions/ActionTypes';
 const mapStateToProps = (state) => ({
 
     loadAnimation: state.animationReducer.loadAnimation,
+    currentDelay: state.animationReducer.currentDelay
 
 });
 
@@ -19,6 +20,7 @@ const mapDispatchToProps = (dispatch) => ({
 class ImageLoader extends Component {
     state = {
         opacity: new Animated.Value(0),
+
     }
 
     onLoad = () => {
@@ -30,11 +32,28 @@ class ImageLoader extends Component {
     }
 
     onLeave = () => {
-        console.log('triggered')
         Animated.timing(this.state.opacity, {
-            toValue: 0,
+            toValue: 0.3,
             duration: 500,
-            delay: 1200,
+            delay: this.props.currentDelay,
+            useNativeDriver: true,
+        }).start(() => this.vanish());
+    }
+
+    vanish = () => {
+        Animated.timing(this.state.opacity, {
+            toValue: 0.1,
+            duration: 2000,
+            delay: 25,
+            useNativeDriver: true,
+        }).start(() => this.vanish2());
+    }
+
+    vanish2 = () => {
+        Animated.timing(this.state.opacity, {
+            toValue: 0.1,
+            duration: 1000,
+            delay: 100,
             useNativeDriver: true,
         }).start();
     }
@@ -51,7 +70,7 @@ class ImageLoader extends Component {
                             {
                                 scale: this.state.opacity.interpolate({
                                     inputRange: [0, 1],
-                                    outputRange: [0.2, 1],
+                                    outputRange: [0.3, 1],
                                 })
                             },
                         ],

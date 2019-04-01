@@ -10,10 +10,11 @@ import {
   Dimensions,
   Alert
 } from 'react-native';
+import { Button } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
-import { Button } from 'react-native-elements';
+
 
 const mapStateToProps = (state) => ({
   count: state.counterReducer.count,

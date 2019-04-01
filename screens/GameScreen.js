@@ -50,7 +50,7 @@ class GameScreen extends React.Component {
     }
 
     update = () => {
-        if (this.props.gameOver == true) {
+        if (this.props.gameOver) {
             this.props.navigation.navigate('Home');
 
             this.props.toggleGameOver();
@@ -106,7 +106,7 @@ class GameScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: 'slategray',
         position: 'relative',
     },
 });
