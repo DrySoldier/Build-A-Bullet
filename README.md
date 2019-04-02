@@ -3,28 +3,10 @@
 Mobile game that combines the genres of clicker-games and bullet-hell games
 
 
-TODO:
+# Alpha 0.1
 
-1.) Create confines for enemy attacks
+This is an alpha 0.1 of the game. Basic things such as a simple store and simple game is made. The next version plans to have a more grid-like playing system, along with expanded store UI.
 
-    Reasons: Enemy projectiles clip out of bounds and into eachother
+If things go horribly wrong with the grid-like redesign, this is a rollback version to start all over.
 
-    Files Included: Boss.js
-
-2.) Create the spaceship screen and provide the ability to switch spaceships
-
-    Files: SpaceshipScreen.js, redux
-
-3.) Create a larger store and upgrades to get more bullets
-
-    BulletScreen.js, redux
-
-4.) Implement the use of your bullets in-game
-
-    Files: Boss.js, redux
-
-5.) Create the settings screen - low priority
-
-6.) Get a design choice, tighten up the homescreen and shop screens
-
-    Files: All screens
+Godspeed, future Christian.
