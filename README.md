@@ -7,9 +7,9 @@ TODO:
 
 ~~1.) Create confines for enemy attacks~~
 
-    ~~Reasons: Enemy projectiles clip out of bounds and into eachother~~
+   ~~Reasons: Enemy projectiles clip out of bounds and into eachother~~
 
-    ~~Files Included: Boss.js~~
+   ~~Files Included: Boss.js~~
 
     Decided just build an entirely new system rather than work that out.
 
