@@ -31,9 +31,10 @@ class GameScreen extends React.Component {
         super(props)
 
         this.state = {
-            boss: [],
-            bossChosen: false,
+
         }
+        this.bossChosen = false;
+        this.boss;
 
     }
 
@@ -67,13 +68,10 @@ class GameScreen extends React.Component {
         switch (this.randomIntFromInterval(0, 1)) {
             case 0:
 
-                if (!this.state.bossChosen) {
+                if (!this.bossChosen) {
 
-                    this.setState({
-                        boss:
-                            <Boss1 />
-                    })
-                    this.setState({ bossChosen: true })
+                    this.boss = <Boss1 />;
+                    this.bossChosen = true;
                 }
 
                 break;
@@ -82,11 +80,8 @@ class GameScreen extends React.Component {
 
                 if (!this.state.bossChosen) {
 
-                    this.setState({
-                        boss:
-                            <Boss2 />
-                    })
-                    this.setState({ bossChosen: true })
+                    this.boss = <Boss2 />;
+                    this.bossChosen = true;
                 }
 
                 break;
@@ -94,10 +89,10 @@ class GameScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                {//this.state.boss
+                {//this.boss
                 }
 
-                <Boss1/>
+                <Boss1 />
             </View>
         );
     }
