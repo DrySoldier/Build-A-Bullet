@@ -15,8 +15,8 @@ class EnemyShip extends React.Component {
             <View>
                 <Sprite
                     repeat={true}
-                    src={require("../assets/spriteSheet/Ships/Saboteur.png")}
-                    scale={10}
+                    src={this.props.shipSrc}
+                    scale={2}
                     state={0}
                     steps={[1, 2, 3, 4]}
                     tileHeight={32}

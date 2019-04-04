@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 
 import PlayerShip from './PlayerShip';
+import EnemyShip from './EnemyShip';
 
 const device_height = Dimensions.get('window').height;
 const device_width = Dimensions.get('window').width;
@@ -17,9 +18,13 @@ export default class GameBoard extends React.Component {
         }
 
     }
-    
+
     _handlePress = index => {
         this.props.GameBoardRef(index);
+    }
+
+    _handleEnemyPress = index => {
+
     }
 
     render() {
@@ -30,7 +35,7 @@ export default class GameBoard extends React.Component {
 
                     return (
                         <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
-                            <View style={styles.emptySpace}>
+                            <View style={[styles.emptySpace, styles.space]}>
 
                             </View>
                         </TouchableOpacity>
@@ -40,8 +45,27 @@ export default class GameBoard extends React.Component {
 
                     return (
                         <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
-                            <View style={styles.playerSpace}>
-                                <PlayerShip style={styles.playerShip}/>
+                            <View style={[styles.shipSpace, styles.space]}>
+                                <PlayerShip />
+                            </View>
+                        </TouchableOpacity>
+                    )
+                case 2:
+
+                    return (
+                        <TouchableOpacity onPress={() => this._handleEnemyPress(index)} key={index}>
+                            <View style={[styles.shipSpace, styles.space]}>
+                                <EnemyShip shipSrc={this.props.shipSrc} />
+                            </View>
+                        </TouchableOpacity>
+                    )
+
+                case 3:
+
+                    return (
+                        <TouchableOpacity onPress={() => this._handleBulletPress(index)} key={index}>
+                            <View style={[styles.bulletSpace, styles.space]}>
+                                <EnemyShip shipSrc={this.props.shipSrc} />
                             </View>
                         </TouchableOpacity>
                     )
@@ -49,7 +73,7 @@ export default class GameBoard extends React.Component {
                 default:
                     return (
                         <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
-                            <View style={styles.testSpace}>
+                            <View style={[styles.testSpace, styles.space]}>
 
                             </View>
                         </TouchableOpacity>
@@ -72,35 +96,29 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
     },
-    emptySpace: {
+    space: {
         height: device_height / 9,
         width: device_width / 5,
+
         borderWidth: 1,
         borderColor: 'white',
-        backgroundColor: 'black'
-    },
-    enemySpace: {
-        height: device_height / 9,
-        width: device_width / 5,
-        borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'red'
-    },
-    testSpace: {
-        height: device_height / 9,
-        width: device_width / 5,
-        borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'yellow'
-    },
-    playerSpace: {
-        height: device_height / 9,
-        width: device_width / 5,
-        borderWidth: 1,
-        borderColor: 'white',
-        backgroundColor: 'gray',
         justifyContent: 'center',
         alignItems: 'center'
     },
+    emptySpace: {
+        backgroundColor: 'black'
+    },
+    enemySpace: {
+        backgroundColor: 'red'
+    },
+    testSpace: {
+        backgroundColor: 'yellow'
+    },
+    shipSpace: {
+        backgroundColor: 'gray',
+    },
+    bulletSpace: {
+        
+    }
 
 });

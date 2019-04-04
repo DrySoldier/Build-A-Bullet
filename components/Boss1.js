@@ -2,8 +2,6 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Alert, Animated } from 'react-native';
 
 import { Stage } from 'react-game-kit/native';
-import TypeWriter from 'react-native-typewriter';
-
 import GameHeader from './GameHeader';
 import GameBoard from './GameBoard';
 
@@ -13,6 +11,7 @@ import ImageLoader from '../components/ImageLoader';
 
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
+import TextBox from './TextBox';
 
 const mapStateToProps = (state) => ({
 
@@ -54,11 +53,6 @@ class Boss1 extends React.Component {
             waveNumber: 0,
             currentEnemyAmount: 35,
 
-            // game states
-            gameState: 0,
-            triggered: false,
-            bossAppearing: false,
-
             tiles: [
                 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0,
@@ -70,10 +64,14 @@ class Boss1 extends React.Component {
                 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0,
             ],
+            
+            currentText: '',
 
         }
 
-        this.lastIndex = -1;
+        this.gameState = 0;
+
+        this.lastIndexOfPlayer = -1;
         this.interval;
 
     }
@@ -84,6 +82,16 @@ class Boss1 extends React.Component {
         this.context.loop.subscribe(this.update);
 
         this.interval = setInterval(function () { generateEnemy() }, 100);
+
+        this.handlePositionChange(32, 1);
+
+        setTimeout(timeout = () => { 
+            this.handlePositionChange(12, 2); 
+         }, 1000);
+
+         setTimeout(timeout = () => { 
+            this.setState({ currentText: 'Time to die.' });
+         }, 2000);
     }
 
     // disengaging loop
@@ -100,19 +108,32 @@ class Boss1 extends React.Component {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
+    handlePositionChange = (i, nextState) => {
+
+        let splicedArr = [...this.state.tiles];
+
+        splicedArr.splice(i, 1, nextState);
+
+        if (nextState === 1) {
+
+            // this line changes the last spot of the player to be empty
+            splicedArr.splice(this.lastIndexOfPlayer, 1, 0);
+
+            // set last spot of player to check later
+            this.lastIndexOfPlayer = splicedArr.indexOf(1);
+        }
+
+        this.setState({ tiles: splicedArr });
+
+    }
+
     // user input for fight, everytime they press on the screen this function triggers
 
     handlePress = index => {
 
-        if (this.lastIndex !== index) {
-            let splicedArr = [...this.state.tiles];
+        if (this.lastIndexOfPlayer !== index && this.gameState != 0) {
 
-            splicedArr.splice(index, 1, 1);
-            splicedArr.splice(this.lastIndex, 1, 0);
-
-            this.lastIndex = splicedArr.indexOf(1);
-
-            this.setState({ tiles: splicedArr });
+            this.handlePositionChange(index, 1);
 
             // Handle fuel drop
             if (this.props.fuel != 0) {
@@ -120,13 +141,21 @@ class Boss1 extends React.Component {
             } else if (this.props.fuel == 0) {
                 Alert.alert('Ran out of fuel! Pulling back!');
 
-                this.setState({ gameState: 3 });
-                this.timeout = setTimeout(timeout = () => { this.props.toggleGameOver() }, 4000);
+                this.gameState = 3;
+                setTimeout(timeout = () => { this.props.toggleGameOver() }, 4000);
             }
 
         } else {
             // pew pew
         }
+
+    }
+
+    callbackFunction = () => {
+
+        this.setState({ currentText: '' });
+        this.gameState = 1;
+        this.handlePositionChange(12, 0);
 
     }
 
@@ -136,29 +165,22 @@ class Boss1 extends React.Component {
 
         // gameState 0 = intro
         // gameState 1 = gameplay, userinput
-        // gameState 2 = winning
+        // gameState 2 = boss phase
         // gameState 3 = losing
 
         // first, set boss position and lowering
 
-        if (this.state.gameState == 0) {
+        if (this.gameState === 0) {
 
-            // intro here
+        } else if (this.gameState === 1) {
 
-        } else if (this.state.gameState == 1) {
-
-            // gamestart 
-
-            // COLLISION GOES HERE
-
-            // winning
-
-        } else if (this.state.gameState == 2) {
+        } else if (this.gameState === 2) {
 
             // attack boss phase
 
             if (this.state.bossHealth < 0) {
-                this.setState({ gameState: 0 })
+
+                //this.gameState = 0;
 
                 Alert.alert('You destroyed the enemy ship!');
 
@@ -168,7 +190,7 @@ class Boss1 extends React.Component {
 
             // player loses
 
-        } else if (this.state.gameState == 3) {
+        } else if (this.gameState === 3) {
             // Put player losing stuff here
         }
 
@@ -180,16 +202,16 @@ class Boss1 extends React.Component {
 
         generateEnemy = () => {
 
-            if (this.state.enemies.length < this.state.currentEnemyAmount && this.state.gameState == 1) {
+            if (this.state.enemies.length < this.state.currentEnemyAmount && this.gameState == 1) {
 
-                // create enemy view
+                
 
-            } else if (this.state.waveNumber == 5 && this.state.gameState != 3) {
+            } else if (this.state.waveNumber == 5 && this.gameState != 3) {
 
                 // comment this to set boss to never appear
                 // this.setState({ gameState: 2 });
 
-            } else if (this.state.gameState != 0) {
+            } else if (this.gameState != 0) {
 
                 // I have no idea what goes here.
                 // Maybe a fail-safe to ensure boss leaves at right time?
@@ -198,7 +220,7 @@ class Boss1 extends React.Component {
         }
 
         return (
-            <TouchableOpacity activeOpacity={1} onPress={(evt) => this.handlePress(evt)} style={styles.container}  >
+            <View style={styles.container} >
                 <Stage width={device_width} height={device_height} >
 
                     <GameHeader />
@@ -206,10 +228,16 @@ class Boss1 extends React.Component {
                     <GameBoard tileLayout={this.state.tiles}
                         onRef={ref => (this.GameBoardRef = ref)}
                         GameBoardRef={this.handlePress.bind(this)}
+                        shipSrc={require("../assets/spriteSheet/Ships/Saboteur.png")}
                     />
 
+                    <TextBox text={this.state.currentText} style={styles.textBox} cb={() => this.callbackFunction()} />
+
                 </Stage>
-            </TouchableOpacity>
+
+
+
+            </View >
         );
     }
 }
@@ -220,12 +248,10 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'relative',
     },
-    enemy: {
-        height: 100,
-        width: 100,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        zIndex: 1,
+    textBox: {
+        position: 'absolute',
+        alignSelf: 'center',
+        
     }
 
 });
