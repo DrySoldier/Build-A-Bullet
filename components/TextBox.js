@@ -10,11 +10,6 @@ const device_width = Dimensions.get('window').width;
 
 export default class TextBox extends React.PureComponent {
 
-    constructor(props) {
-        super(props)
-
-    }
-
     componentWillMount() {
         this.heightValue = new Animated.Value(0);
 
@@ -22,8 +17,6 @@ export default class TextBox extends React.PureComponent {
     }
 
     componentDidUpdate() {
-
-        console.log('COMPONENT UPDATED');
 
         if (this.props.text != '') {
             console.log('TEXBOX SPRUNG');

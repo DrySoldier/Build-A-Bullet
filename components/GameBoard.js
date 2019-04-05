@@ -10,15 +10,6 @@ const device_width = Dimensions.get('window').width;
 
 export default class GameBoard extends React.Component {
 
-    constructor(props) {
-        super(props)
-
-        this.state = {
-
-        }
-
-    }
-
     _handlePress = index => {
         this.props.GameBoardRef(index);
     }
@@ -29,7 +20,15 @@ export default class GameBoard extends React.Component {
 
     render() {
 
+        // 0 = empty space
+        // 1 = player space
+        // 2 = enemy ship space
+        // 3 = bullet space
+
         const tiles = this.props.tileLayout.map((state, index) => {
+
+            console.log(index, 'Needs to be updated')
+
             switch (state) {
                 case 0:
 
@@ -64,8 +63,8 @@ export default class GameBoard extends React.Component {
 
                     return (
                         <TouchableOpacity onPress={() => this._handleBulletPress(index)} key={index}>
-                            <View style={[styles.bulletSpace, styles.space]}>
-                                <EnemyShip shipSrc={this.props.shipSrc} />
+                            <View style={[styles.space]}>
+                                <View style={styles.bulletSpace}></View>
                             </View>
                         </TouchableOpacity>
                     )
@@ -79,6 +78,7 @@ export default class GameBoard extends React.Component {
                         </TouchableOpacity>
                     )
             }
+
         });
 
         return (
@@ -115,10 +115,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'yellow'
     },
     shipSpace: {
-        backgroundColor: 'gray',
+        backgroundColor: 'black'
     },
     bulletSpace: {
-        
+        height: 75,
+        width: 75,
+        borderRadius: 20,
+        backgroundColor: 'purple',
     }
 
 });

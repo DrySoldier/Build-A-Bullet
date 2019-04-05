@@ -36,6 +36,12 @@ const mapDispatchToProps = (dispatch) => ({
 const device_height = Dimensions.get('window').height;
 const device_width = Dimensions.get('window').width;
 
+// random num generator for randomly placed enemies
+
+function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 class Boss1 extends React.Component {
 
     static contextTypes = {
@@ -49,10 +55,6 @@ class Boss1 extends React.Component {
 
             bossHealth: 1000,
 
-            enemies: [],
-            waveNumber: 0,
-            currentEnemyAmount: 35,
-
             tiles: [
                 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0,
@@ -64,7 +66,7 @@ class Boss1 extends React.Component {
                 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0,
             ],
-            
+
             currentText: '',
 
         }
@@ -72,7 +74,9 @@ class Boss1 extends React.Component {
         this.gameState = 0;
 
         this.lastIndexOfPlayer = -1;
-        this.interval;
+
+        this.waveNumber = 0;
+        this.currentEnemyAmount = 15;
 
     }
 
@@ -81,38 +85,33 @@ class Boss1 extends React.Component {
     componentDidMount() {
         this.context.loop.subscribe(this.update);
 
-        this.interval = setInterval(function () { generateEnemy() }, 100);
+        this.handlePositionChange([32], 1);
 
-        this.handlePositionChange(32, 1);
+        setTimeout(timeout = () => {
+            this.handlePositionChange([12], 2);
+        }, 1000);
 
-        setTimeout(timeout = () => { 
-            this.handlePositionChange(12, 2); 
-         }, 1000);
-
-         setTimeout(timeout = () => { 
+        setTimeout(timeout = () => {
             this.setState({ currentText: 'Time to die.' });
-         }, 2000);
+        }, 2000);
+
     }
 
     // disengaging loop
 
     componentWillUnmount() {
         this.context.loop.unsubscribe(this.update);
-
-        clearInterval(this.interval);
     }
 
-    // random num generator for randomly placed enemies
-
-    randomIntFromInterval(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    handlePositionChange = (i, nextState) => {
+    handlePositionChange = (index, nextState) => {
 
         let splicedArr = [...this.state.tiles];
 
-        splicedArr.splice(i, 1, nextState);
+        for (let i = 0; i < index.length; i++) {
+
+            splicedArr.splice(index[i], 1, nextState);
+
+        }
 
         if (nextState === 1) {
 
@@ -133,7 +132,7 @@ class Boss1 extends React.Component {
 
         if (this.lastIndexOfPlayer !== index && this.gameState != 0) {
 
-            this.handlePositionChange(index, 1);
+            this.handlePositionChange([index], 1);
 
             // Handle fuel drop
             if (this.props.fuel != 0) {
@@ -154,8 +153,42 @@ class Boss1 extends React.Component {
     callbackFunction = () => {
 
         this.setState({ currentText: '' });
+        this.handlePositionChange([12], 0);
+
         this.gameState = 1;
-        this.handlePositionChange(12, 0);
+
+        setInterval(timeout = () => {
+            this.createNewBulletWave();
+
+            // how fast enemies are created
+        }, 3000);
+
+    }
+
+    createNewBulletWave = () => {
+
+        for (let i = 0; i < this.currentEnemyAmount; i++) {
+
+            let spawnPoint = randomIntFromInterval(1, 5);
+            let lastEnemyPosition = spawnPoint;
+
+            this.handlePositionChange([spawnPoint], 3);
+
+            let interval = setInterval(interval = () => {
+                //console.log('Enemy updated');
+
+                if (lastEnemyPosition > 45) {
+                    clearInterval(interval);
+                }
+
+                this.handlePositionChange([spawnPoint] += 5, 3);
+                this.handlePositionChange([lastEnemyPosition], 0);
+                lastEnemyPosition += 5;
+
+                // how fast enemies move
+            }, randomIntFromInterval(300, 750));
+
+        }
 
     }
 
@@ -197,28 +230,6 @@ class Boss1 extends React.Component {
     };
 
     render() {
-
-        // generate enemy function
-
-        generateEnemy = () => {
-
-            if (this.state.enemies.length < this.state.currentEnemyAmount && this.gameState == 1) {
-
-                
-
-            } else if (this.state.waveNumber == 5 && this.gameState != 3) {
-
-                // comment this to set boss to never appear
-                // this.setState({ gameState: 2 });
-
-            } else if (this.gameState != 0) {
-
-                // I have no idea what goes here.
-                // Maybe a fail-safe to ensure boss leaves at right time?
-
-            }
-        }
-
         return (
             <View style={styles.container} >
                 <Stage width={device_width} height={device_height} >
@@ -231,11 +242,11 @@ class Boss1 extends React.Component {
                         shipSrc={require("../assets/spriteSheet/Ships/Saboteur.png")}
                     />
 
-                    <TextBox text={this.state.currentText} style={styles.textBox} cb={() => this.callbackFunction()} />
+                    <View style={styles.textBoxContainer}>
+                        <TextBox text={this.state.currentText} cb={() => this.callbackFunction()} />
+                    </View>
 
                 </Stage>
-
-
 
             </View >
         );
@@ -248,11 +259,12 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'relative',
     },
-    textBox: {
-        position: 'absolute',
-        alignSelf: 'center',
-        
-    }
+    textBoxContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+        marginLeft: 20
+    },
 
 });
 
