@@ -8,7 +8,7 @@ import EnemyShip from './EnemyShip';
 const device_height = Dimensions.get('window').height;
 const device_width = Dimensions.get('window').width;
 
-export default class GameBoard extends React.Component {
+export default class GameBoard extends React.PureComponent {
 
     _handlePress = index => {
         this.props.GameBoardRef(index);
@@ -16,6 +16,14 @@ export default class GameBoard extends React.Component {
 
     _handleEnemyPress = index => {
 
+    }
+
+    shouldComponentUpdate(prevProps) {
+        if(prevProps === this.props.tileLayout){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     render() {
@@ -26,8 +34,6 @@ export default class GameBoard extends React.Component {
         // 3 = bullet space
 
         const tiles = this.props.tileLayout.map((state, index) => {
-
-            console.log(index, 'Needs to be updated')
 
             switch (state) {
                 case 0:
@@ -79,10 +85,11 @@ export default class GameBoard extends React.Component {
                     )
             }
 
+
         });
 
         return (
-            <View style={styles.container}>
+            <View style={styles.container} >
                 {tiles}
             </View>
 

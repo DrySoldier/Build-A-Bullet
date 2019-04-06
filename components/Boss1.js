@@ -53,7 +53,7 @@ class Boss1 extends React.Component {
 
         this.state = {
 
-            bossHealth: 1000,
+            //bossHealth: 1000,
 
             tiles: [
                 0, 0, 0, 0, 0,
@@ -74,9 +74,15 @@ class Boss1 extends React.Component {
         this.gameState = 0;
 
         this.lastIndexOfPlayer = -1;
+        this.indexOfLastEnemies = [];
+
+        this.currentEnemyAmount = 3;
+        this.enemyCreationSpeed = 2000;
+        this.enemyVelocity = 200;
 
         this.waveNumber = 0;
-        this.currentEnemyAmount = 15;
+
+        this.test = this.state.tiles;
 
     }
 
@@ -85,10 +91,10 @@ class Boss1 extends React.Component {
     componentDidMount() {
         this.context.loop.subscribe(this.update);
 
-        this.handlePositionChange([32], 1);
+        this.handlePositionChange(32, 1);
 
         setTimeout(timeout = () => {
-            this.handlePositionChange([12], 2);
+            this.handlePositionChange(12, 2);
         }, 1000);
 
         setTimeout(timeout = () => {
@@ -107,11 +113,7 @@ class Boss1 extends React.Component {
 
         let splicedArr = [...this.state.tiles];
 
-        for (let i = 0; i < index.length; i++) {
-
-            splicedArr.splice(index[i], 1, nextState);
-
-        }
+        splicedArr.splice(index, 1, nextState);
 
         if (nextState === 1) {
 
@@ -153,7 +155,7 @@ class Boss1 extends React.Component {
     callbackFunction = () => {
 
         this.setState({ currentText: '' });
-        this.handlePositionChange([12], 0);
+        this.handlePositionChange(12, 0);
 
         this.gameState = 1;
 
@@ -161,7 +163,7 @@ class Boss1 extends React.Component {
             this.createNewBulletWave();
 
             // how fast enemies are created
-        }, 3000);
+        }, this.enemyCreationSpeed);
 
     }
 
@@ -172,7 +174,7 @@ class Boss1 extends React.Component {
             let spawnPoint = randomIntFromInterval(1, 5);
             let lastEnemyPosition = spawnPoint;
 
-            this.handlePositionChange([spawnPoint], 3);
+            this.handlePositionChange(spawnPoint, 3);
 
             let interval = setInterval(interval = () => {
                 //console.log('Enemy updated');
@@ -181,12 +183,12 @@ class Boss1 extends React.Component {
                     clearInterval(interval);
                 }
 
-                this.handlePositionChange([spawnPoint] += 5, 3);
-                this.handlePositionChange([lastEnemyPosition], 0);
+                this.handlePositionChange(spawnPoint += 5, 3);
+                this.handlePositionChange(lastEnemyPosition, 0);
                 lastEnemyPosition += 5;
 
                 // how fast enemies move
-            }, randomIntFromInterval(300, 750));
+            }, this.enemyVelocity);
 
         }
 
