@@ -173,7 +173,6 @@ class Boss1 extends React.Component {
                     this.handlePositionChange(spawnPoint, 0);
                 }
 
-
                 bWarn = !bWarn;
 
             }, this.timeBetweenWarnings);
