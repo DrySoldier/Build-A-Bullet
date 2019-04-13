@@ -1,25 +1,33 @@
 import React from 'react';
 
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 
 import PlayerShip from './PlayerShip';
 import EnemyShip from './EnemyShip';
+import Laser from './Laser';
 
 const device_height = Dimensions.get('window').height;
 const device_width = Dimensions.get('window').width;
 
-export default class GameBoard extends React.PureComponent {
+export default class GameBoard extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+        this.playerMarginTop = 350;
+
+    }
 
     _handlePress = index => {
         this.props.GameBoardRef(index);
     }
 
     _handleEnemyPress = index => {
-
+        this.props.GameBoardRef(index);
     }
 
     shouldComponentUpdate(prevProps) {
-        if(prevProps === this.props.tileLayout){
+        if (prevProps === this.props.tileLayout) {
             return false;
         } else {
             return true;
@@ -29,19 +37,36 @@ export default class GameBoard extends React.PureComponent {
     render() {
 
         // 0 = empty space
-        // 1 = player space
-        // 2 = enemy ship space
-        // 3 = bullet space
+        // 1 = enemy ship space
+        // 2 = bullet space
 
         const tiles = this.props.tileLayout.map((state, index) => {
 
+            playerShip = () => {
+                if (this.props.currentPosition === index) {
+                    return <PlayerShip />
+                } else {
+                    return;
+                }
+            }
+
             switch (state) {
+                case -1:
+                    return (
+                        <TouchableOpacity onPress={() => this._handlePress(index, state)} key={index}>
+                            <View style={[styles.space, styles.warningSpace]}>
+                                <Image style={{position: 'absolute'}} source={require('../assets/images/caution.png')}></Image>
+                                <View style={{ marginTop: this.playerMarginTop }}>{playerShip()}</View>
+                            </View>
+                        </TouchableOpacity>
+                    )
+
                 case 0:
 
                     return (
                         <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
                             <View style={[styles.emptySpace, styles.space]}>
-
+                                <View style={{ marginTop: this.playerMarginTop }}>{playerShip()}</View>
                             </View>
                         </TouchableOpacity>
                     )
@@ -49,37 +74,31 @@ export default class GameBoard extends React.PureComponent {
                 case 1:
 
                     return (
-                        <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
+                        <TouchableOpacity onPress={() => this._handlePress(index, state)} key={index}>
                             <View style={[styles.shipSpace, styles.space]}>
-                                <PlayerShip />
+                                <EnemyShip style={{ marginBottom: 200 }} shipSrc={this.props.shipSrc} />
+                                <View style={{ marginTop: this.playerMarginTop }}>{playerShip()}</View>
+
                             </View>
                         </TouchableOpacity>
                     )
+
                 case 2:
 
                     return (
-                        <TouchableOpacity onPress={() => this._handleEnemyPress(index)} key={index}>
-                            <View style={[styles.shipSpace, styles.space]}>
-                                <EnemyShip shipSrc={this.props.shipSrc} />
-                            </View>
-                        </TouchableOpacity>
-                    )
-
-                case 3:
-
-                    return (
-                        <TouchableOpacity onPress={() => this._handleBulletPress(index)} key={index}>
-                            <View style={[styles.space]}>
-                                <View style={styles.bulletSpace}></View>
+                        <TouchableOpacity onPress={() => this._handlePress(index, state)} key={index}>
+                            <View style={[styles.space, styles.bulletSpace]}>
+                                <Laser />
+                                <View style={{ marginTop: this.playerMarginTop }}>{playerShip()}</View>
                             </View>
                         </TouchableOpacity>
                     )
 
                 default:
                     return (
-                        <TouchableOpacity onPress={() => this._handlePress(index)} key={index}>
+                        <TouchableOpacity onPress={() => this._handlePress(index, state)} key={index}>
                             <View style={[styles.testSpace, styles.space]}>
-
+                                <View style={{ marginTop: this.playerMarginTop }}>{playerShip()}</View>
                             </View>
                         </TouchableOpacity>
                     )
@@ -104,13 +123,16 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     space: {
-        height: device_height / 9,
-        width: device_width / 5,
+        height: device_height / 1.1,
+        width: device_width / 3.2,
 
         borderWidth: 1,
         borderColor: 'white',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    laserSpace: {
+        position: 'absolute',
     },
     emptySpace: {
         backgroundColor: 'black'
@@ -119,16 +141,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'red'
     },
     testSpace: {
-        backgroundColor: 'yellow'
+        backgroundColor: 'yellow',
     },
     shipSpace: {
         backgroundColor: 'black'
     },
+    warningSpace: {
+        backgroundColor: 'black'
+    },
     bulletSpace: {
-        height: 75,
-        width: 75,
-        borderRadius: 20,
-        backgroundColor: 'purple',
+        backgroundColor: 'red',
     }
 
 });

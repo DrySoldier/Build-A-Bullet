@@ -18,7 +18,7 @@ const device_width = Dimensions.get('window').width;
 class GameHeader extends React.Component {
     render() {
         return (
-            <BlurView style={styles.infoContainer} intensity={50} tint="dark">
+            <BlurView style={styles.infoContainer} intensity={50} tint="dark" >
 
                 <TouchableOpacity activeOpacity={1}>
                     <Text style={styles.text}>{this.props.count}</Text>

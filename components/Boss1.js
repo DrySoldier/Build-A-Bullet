@@ -1,13 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Alert, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Alert, Animated, Button } from 'react-native';
 
 import { Stage } from 'react-game-kit/native';
 import GameHeader from './GameHeader';
 import GameBoard from './GameBoard';
 
 import PropTypes from 'prop-types';
-
-import ImageLoader from '../components/ImageLoader';
 
 import { connect } from 'react-redux';
 import * as Actions from '../redux/Actions/ActionTypes';
@@ -16,6 +14,8 @@ import TextBox from './TextBox';
 const mapStateToProps = (state) => ({
 
     gameOver: state.gameReducer.gameOver,
+
+    fuel: state.fuelReducer.fuel
 
 });
 
@@ -42,6 +42,8 @@ function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+const delay = t => new Promise(resolve => setTimeout(resolve, t));
+
 class Boss1 extends React.Component {
 
     static contextTypes = {
@@ -53,36 +55,32 @@ class Boss1 extends React.Component {
 
         this.state = {
 
-            //bossHealth: 1000,
-
             tiles: [
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
+                0, 0, 0,
             ],
 
             currentText: '',
+
+            playerCurrentPosition: -1,
 
         }
 
         this.gameState = 0;
 
+        this.currentLaserTiles = [];
+
         this.lastIndexOfPlayer = -1;
-        this.indexOfLastEnemies = [];
 
-        this.currentEnemyAmount = 3;
-        this.enemyCreationSpeed = 2000;
-        this.enemyVelocity = 200;
+        // GAMEPLAY VARIABLES - BE CAREFUL
+        this.enemyCreationSpeed = 1750;
+        // MUST BE OVER 300ms
+        this.laserLifeStart = 700;
+        this.laserLifeEnding = 1500;
+        this.timeBetweenWarnings = 50;
 
+        // UNUSED
+        this.bossHealth = 1000;
         this.waveNumber = 0;
-
-        this.test = this.state.tiles;
 
     }
 
@@ -91,15 +89,18 @@ class Boss1 extends React.Component {
     componentDidMount() {
         this.context.loop.subscribe(this.update);
 
-        this.handlePositionChange(32, 1);
+        // set player 
+        delay(100).then(() => {
+            this.setState({ playerCurrentPosition: 1 });
+            this.lastIndexOfPlayer = 0;
+        });
 
-        setTimeout(timeout = () => {
-            this.handlePositionChange(12, 2);
-        }, 1000);
+        // set enemy
+        delay(1000).then(() => {
+            this.handlePositionChange(1, 1);
+        });
 
-        setTimeout(timeout = () => {
-            this.setState({ currentText: 'Time to die.' });
-        }, 2000);
+        delay(2000).then(() => this.setState({ currentText: 'Time to die.' }));
 
     }
 
@@ -109,23 +110,85 @@ class Boss1 extends React.Component {
         this.context.loop.unsubscribe(this.update);
     }
 
+
+    // arguments - (WHERE STATE IS GOING, WHAT THE STATE IS)
     handlePositionChange = (index, nextState) => {
 
         let splicedArr = [...this.state.tiles];
 
-        splicedArr.splice(index, 1, nextState);
-
-        if (nextState === 1) {
-
-            // this line changes the last spot of the player to be empty
-            splicedArr.splice(this.lastIndexOfPlayer, 1, 0);
-
-            // set last spot of player to check later
-            this.lastIndexOfPlayer = splicedArr.indexOf(1);
+        if (nextState === 2) {
+            this.currentLaserTiles.push(index);
         }
+
+        splicedArr.splice(index, 1, nextState);
 
         this.setState({ tiles: splicedArr });
 
+    }
+
+    callbackFunction = () => {
+
+        this.setState({ currentText: '' });
+
+        if (this.gameState === 0) {
+            this.handlePositionChange(1, 0);
+
+            this.gameState = 1;
+
+            // let bulletWave = [[0, 1000], [1, 2000], [2, 3000], [1, 4000], [0, 5000]];
+
+            setInterval(interval = () => {
+                this.createNewBulletWave();
+
+            }, this.enemyCreationSpeed)
+
+            this.createNewBulletWave();
+
+        } else if (this.gameState === 3) {
+            this.props.toggleGameOver();
+        }
+
+    }
+
+    createNewBulletWave = bulletMap => {
+
+        this.currentLaserTiles = [];
+
+        for (let i = 0; i < bulletMap; i++) {
+
+            let spawnPoint = randomIntFromInterval(0, 2);
+
+            let bWarn = false;
+
+            this.handlePositionChange(spawnPoint, -1);
+
+            let interval = setInterval(interval = () => {
+
+                if (bWarn) {
+
+                    this.handlePositionChange(spawnPoint, -1);
+
+                } else if (!bWarn) {
+
+                    this.handlePositionChange(spawnPoint, 0);
+                }
+
+
+                bWarn = !bWarn;
+
+            }, this.timeBetweenWarnings);
+
+            delay(this.laserLifeStart).then(() => {
+                clearInterval(interval);
+                this.handlePositionChange(spawnPoint, 2);
+
+            });
+
+            delay(this.laserLifeEnding).then(() => {
+                this.handlePositionChange(spawnPoint, 0);
+                this.currentLaserTiles = [];
+            });
+        }
     }
 
     // user input for fight, everytime they press on the screen this function triggers
@@ -134,62 +197,22 @@ class Boss1 extends React.Component {
 
         if (this.lastIndexOfPlayer !== index && this.gameState != 0) {
 
-            this.handlePositionChange([index], 1);
+            this.lastIndexOfPlayer = index;
+
+            this.setState({ playerCurrentPosition: index });
 
             // Handle fuel drop
             if (this.props.fuel != 0) {
                 this.props.decrementFuel();
-            } else if (this.props.fuel == 0) {
-                Alert.alert('Ran out of fuel! Pulling back!');
+
+            } else if (this.props.fuel === 1) {
+                this.setState({ currentText: 'Ran out of fuel! Pulling back.' });
 
                 this.gameState = 3;
-                setTimeout(timeout = () => { this.props.toggleGameOver() }, 4000);
             }
 
         } else {
             // pew pew
-        }
-
-    }
-
-    callbackFunction = () => {
-
-        this.setState({ currentText: '' });
-        this.handlePositionChange(12, 0);
-
-        this.gameState = 1;
-
-        setInterval(timeout = () => {
-            this.createNewBulletWave();
-
-            // how fast enemies are created
-        }, this.enemyCreationSpeed);
-
-    }
-
-    createNewBulletWave = () => {
-
-        for (let i = 0; i < this.currentEnemyAmount; i++) {
-
-            let spawnPoint = randomIntFromInterval(1, 5);
-            let lastEnemyPosition = spawnPoint;
-
-            this.handlePositionChange(spawnPoint, 3);
-
-            let interval = setInterval(interval = () => {
-                //console.log('Enemy updated');
-
-                if (lastEnemyPosition > 45) {
-                    clearInterval(interval);
-                }
-
-                this.handlePositionChange(spawnPoint += 5, 3);
-                this.handlePositionChange(lastEnemyPosition, 0);
-                lastEnemyPosition += 5;
-
-                // how fast enemies move
-            }, this.enemyVelocity);
-
         }
 
     }
@@ -203,45 +226,36 @@ class Boss1 extends React.Component {
         // gameState 2 = boss phase
         // gameState 3 = losing
 
-        // first, set boss position and lowering
+        // check to see if player is in DANGER ZONE at any given moment.
+        // if true, decrement their bullets
 
-        if (this.gameState === 0) {
-
-        } else if (this.gameState === 1) {
-
-        } else if (this.gameState === 2) {
-
-            // attack boss phase
-
-            if (this.state.bossHealth < 0) {
-
-                //this.gameState = 0;
-
-                Alert.alert('You destroyed the enemy ship!');
-
-                // let other js file know that game is over to go back
-                this.props.toggleGameOver();
+        if (this.gameState === 1)
+            for (let i = 0; i < this.currentLaserTiles.length; i++) {
+                if (this.state.playerCurrentPosition === this.currentLaserTiles[i]) {
+                    this.props.decrement();
+                }
             }
-
-            // player loses
-
-        } else if (this.gameState === 3) {
-            // Put player losing stuff here
-        }
 
     };
 
     render() {
         return (
             <View style={styles.container} >
-                <Stage width={device_width} height={device_height} >
+                <GameHeader />
 
-                    <GameHeader />
+                <Stage
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                    width={device_width} height={device_height}>
 
-                    <GameBoard tileLayout={this.state.tiles}
+                    <GameBoard
+                        tileLayout={this.state.tiles}
                         onRef={ref => (this.GameBoardRef = ref)}
                         GameBoardRef={this.handlePress.bind(this)}
                         shipSrc={require("../assets/spriteSheet/Ships/Saboteur.png")}
+                        currentPosition={this.state.playerCurrentPosition}
                     />
 
                     <View style={styles.textBoxContainer}>
@@ -265,7 +279,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
-        marginLeft: 20
+        marginLeft: 5
     },
 
 });

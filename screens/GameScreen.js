@@ -31,10 +31,9 @@ class GameScreen extends React.Component {
         super(props)
 
         this.state = {
-
+            boss: null,
         }
         this.bossChosen = false;
-        this.boss;
 
     }
 
@@ -48,11 +47,14 @@ class GameScreen extends React.Component {
 
     componentWillUnmount() {
         this.context.loop.unsubscribe(this.update);
+
     }
 
     update = () => {
         if (this.props.gameOver) {
             this.props.navigation.navigate('Home');
+
+            this.setState({ boss: null });
 
             this.props.toggleGameOver();
         }
@@ -65,12 +67,12 @@ class GameScreen extends React.Component {
 
     render() {
 
-        switch (this.randomIntFromInterval(0, 1)) {
+        switch (this.randomIntFromInterval(0, 0)) {
             case 0:
 
                 if (!this.bossChosen) {
 
-                    this.boss = <Boss1 />;
+                    this.setState({ boss: <Boss1 /> });
                     this.bossChosen = true;
                 }
 
@@ -80,7 +82,7 @@ class GameScreen extends React.Component {
 
                 if (!this.state.bossChosen) {
 
-                    this.boss = <Boss2 />;
+                    this.setState({ boss: <Boss1 /> });
                     this.bossChosen = true;
                 }
 
@@ -89,10 +91,9 @@ class GameScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                {//this.boss
+                {
+                    this.state.boss
                 }
-
-                <Boss1 />
             </View>
         );
     }
