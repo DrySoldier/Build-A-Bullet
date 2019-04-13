@@ -73,6 +73,7 @@ class Boss1 extends React.Component {
 
         // GAMEPLAY VARIABLES - BE CAREFUL
         this.enemyCreationSpeed = 1750;
+        this.currentEnemyAmount = 2;
         // MUST BE OVER 300ms
         this.laserLifeStart = 700;
         this.laserLifeEnding = 1500;
@@ -154,7 +155,7 @@ class Boss1 extends React.Component {
 
         this.currentLaserTiles = [];
 
-        for (let i = 0; i < bulletMap; i++) {
+        for (let i = 0; i < this.currentEnemyAmount; i++) {
 
             let spawnPoint = randomIntFromInterval(0, 2);
 
